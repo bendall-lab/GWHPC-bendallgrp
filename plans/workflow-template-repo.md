@@ -4,6 +4,16 @@ Handoff plan for an agent starting in a new, empty repo. Everything it needs fro
 `GWHPC-bendallgrp` repo is quoted or pointed to here. Status: **plan only, nothing created yet**
 (the planning session could not fork; its GitHub access was limited to `GWHPC-bendallgrp`).
 
+## 0. Scope decision (supersedes anything below that conflicts)
+
+The template is a **bare Snakemake repo with no domain rules**: upstream layout and CI, plus the HPC
+configuration in section 4. No example rules beyond one trivial smoke-test rule needed for CI/dry-run
+(delete it if CI can pass without it). No cookiecutter/Copier; GitHub "Use this template" only, with a
+small placeholder-replacing `scripts/init-project.sh`.
+
+Domain workflows (for example single-cell gene expression) are separate repos made from this template.
+Their design is sketched in section 11; it is not part of the template's first milestone.
+
 ## 1. Goal
 
 A GitHub **template repository** in the `bendall-lab` org that gives a new Snakemake 9+ workflow:
@@ -36,7 +46,7 @@ Upstream (observed): `.github/workflows/`, `.test/config/`, `config/` (`config.y
 
 | Upstream | Action |
 |---|---|
-| `workflow/Snakefile`, `workflow/rules/*` | Keep the structure; delete example rules. Leave one tiny runnable `example` rule pair (count lines per sample) so CI and dry-runs work, clearly marked `# REPLACE ME`. |
+| `workflow/Snakefile`, `workflow/rules/*` | Keep the structure; delete example rules. Leave at most one trivial `# REPLACE ME` smoke-test rule so CI and dry-runs work (see section 0). |
 | `config/config.yaml`, `config/README.md` | Keep; add HPC keys (4). Rewrite README to document them. |
 | `.test/` | Keep; shrink to the tiny example. Add `.test/config/hpc-local.yaml` that points scratch paths at a temp dir so CI runs without Pegasus. |
 | `.github/workflows/` | Keep lint + dry-run + small test run (`--sdm conda`). Add shellcheck for `run.sh`/scripts and a placeholder-leftovers check. |
@@ -210,3 +220,30 @@ Recommendation: **two repos, with one-way knowledge flow**.
 2. Repo name and visibility (private first?).
 3. Keep upstream's CI/catalog files, or minimal?
 4. Is `/local` node-local scratch confirmed yet (run `check-node-storage.sh` on a compute node)?
+
+## 11. Later: domain workflows built on this template (design sketch)
+
+Example: a single-cell expression workflow where data arrives from SRA, local files, or cloud storage.
+Sources differ in the first few rules; downstream steps and results layout should not.
+
+- **Normalization boundary.** Source-specific "ingest" rules (`ingest_sra.smk`, `ingest_local.smk`,
+  `ingest_cloud.smk`) all produce the same canonical outputs (for example `01_raw/{sample}_R{1,2}.fastq.gz`
+  plus a normalized `samples.tsv`). Everything downstream reads only canonical paths. This keeps the results
+  directory identical regardless of source.
+- **Select by sample sheet, not globally.** Give `samples.tsv` a `source` column (`sra|local|cloud`) and a
+  `location` column. An input function (`get_raw(wildcards)`) picks the ingest rule per sample, so mixed-source
+  projects work. A global `source:` config key is the simpler fallback.
+- **Conditional includes.** `if "sra" in SOURCES: include: "rules/ingest_sra.smk"`, with `SOURCES` derived
+  from the sheet. For reuse across workflows, Snakemake's `module` directive is available. **VERIFY** it fits
+  before adopting.
+- **Results layout from one place.** A single helper (for example `results("counts", sample)`) builds
+  paths from a layout template in config, so layout changes (and any unavoidable per-source differences)
+  are config, not rule edits. Keep source provenance in `results/provenance/<source>/`.
+- **Interactive parameter choice.** A `scripts/configure` wizard (bash `select`, or Python with `questionary`)
+  asks about source, species and reference, chemistry, and so on, then writes `config/config.yaml` and a
+  samples template. It is a project-level tool, so the bare template needs nothing. Validate its output with
+  the config JSON schema so hand-edited and wizard-made configs are equally checked.
+- **HPC specifics per source:** SRA downloads need internet from a compute node (**VERIFY** that Pegasus
+  compute nodes have outbound network; otherwise run ingest as a `localrule` on a login node or via a data-transfer
+  node) and `prefetch`/`fasterq-dump` temp space on scratch, not NFS. Cloud pulls need credentials kept
+  out of the repo.
