@@ -10,6 +10,11 @@ GitHub Pages serves static sites. The docs are plain Markdown with relative link
 | mdBook | Single binary, very simple | Fewer features, fewer themes |
 | Docusaurus | Rich site features | Node toolchain; heavy for this scope |
 
-**Recommendation:** MkDocs Material. Add `mkdocs.yml` (nav matching [the index](index.md)) and a GitHub Actions workflow that runs `mkdocs gh-deploy --force`, then set Pages to serve the `gh-pages` branch. If the repository is private, check that your GitHub plan supports Pages for private repositories.
+**Chosen:** MkDocs Material. Configuration is `mkdocs.yml`; dependencies are in `requirements-docs.txt`; `.github/workflows/docs.yml` builds with `mkdocs build --strict` and deploys through GitHub Actions on pushes to `main` that touch the docs. The site URL is https://bendall-lab.github.io/GWHPC-bendallgrp/.
+
+- **Add a page:** create `docs/NN-name.md`, add it to `nav:` in `mkdocs.yml`, and to the TOCs in `docs/index.md` and `README.md`.
+- **Preview locally:** `pip install -r requirements-docs.txt && mkdocs serve`.
+- **Pin MkDocs below 2.0.** The Material maintainers warn that MkDocs 2.0 will break plugins and themes, so `requirements-docs.txt` keeps `mkdocs<2`.
+- **Pages visibility:** private repositories need a GitHub plan that supports Pages for them.
 
 Pages sites are publicly readable by default. Keep sensitive details (internal quotas, contact lists) out of any public repo.
