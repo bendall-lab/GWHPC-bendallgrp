@@ -1,0 +1,51 @@
+Pegasus Researcher Guide to Research Allocation Rev B.pdf.md
+
+# Claude Code (keep shared settings and CLAUDE.md; ignore personal/local state)
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md
+
+# JetBrains
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+cmake-build-*/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+.DocumentRevisions-V100
+.TemporaryItems
+
+# Editors
+.vscode/
+*.swp
+*.swo
+*~
+
+# Python / MkDocs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+site/
+
+# Snakemake / SLURM run artifacts
+.snakemake/
+slurm-*.out
+slurm_logs/
+
+# Secrets
+.env
+*.key
+*.pem
+
+# Real user map (names stay on the cluster)
+user_map.tsv

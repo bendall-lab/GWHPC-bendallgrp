@@ -1,0 +1,44 @@
+# @PROJECT_NAME@
+#
+# Code lives on NFS (this directory). Snakemake is run with its working directory on
+# scratch (see run.sh), so relative paths below (and .snakemake/) land on DSS scratch.
+# Only final deliverables are written to the absolute RESULTS path on NFS.
+import csv
+
+configfile: workflow.source_path("config.yaml")
+
+include: "rules/stage_reference.smk"   # provides ref_staged() and ref_path()
+
+PROJECT = config["project_dir"]
+RESULTS = f"{PROJECT}/results"
+
+with open(f"{PROJECT}/docs/samples.tsv") as fh:
+    SAMPLES = [row["sample"] for row in csv.DictReader(fh, delimiter="\t")]
+
+
+rule all:
+    input:
+        f"{RESULTS}/tables/example_summary.tsv",
+
+
+# Placeholder rule: replace with real steps. Relative paths are on scratch.
+rule example_step:
+    input:
+        "01_raw/{sample}.txt",
+    output:
+        "02_intermediates/{sample}.count",
+    threads: 1
+    resources:
+        mem_mb=2000,
+        runtime=10,
+    shell:
+        "wc -l < {input} > {output}"
+
+
+rule example_summary:
+    input:
+        expand("02_intermediates/{sample}.count", sample=SAMPLES),
+    output:
+        f"{RESULTS}/tables/example_summary.tsv",
+    shell:
+        "cat {input} > {output}"

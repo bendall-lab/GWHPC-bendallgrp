@@ -1,0 +1,26 @@
+# Snakemake 9+ profile for Pegasus. Requires snakemake-executor-plugin-slurm.
+# Resource names follow the Pegasus TRES guide: docs/05-slurm-and-partitions.md
+executor: slurm
+jobs: 100
+latency-wait: 60          # NFS/DSS visibility lag between nodes
+printshellcmds: true
+rerun-incomplete: true
+use-conda: true
+conda-prefix: "@GROUP_ROOT@/software/conda/snakemake_envs"
+
+default-resources:
+  slurm_partition: "cpu"
+  runtime: 240            # minutes
+  mem_mb: 4000            # Pegasus default is 4 GB per core; always state it explicitly
+  cpus_per_task: 1
+  # Node-local scratch: confirm path with scripts/check-node-storage.sh, then enable.
+  # tmpdir: "/local"
+
+set-resources:
+  # Example GPU rule. Replace <TYPE> using: sinfo -o "%P %G"
+  # gpu_rule_name:
+  #   slurm_partition: "gpu"
+  #   slurm_extra: "'--gres=gpu:<TYPE>:1'"
+  #   mem_mb: 32000
+  #   cpus_per_task: 4
+  #   runtime: 120
