@@ -4,14 +4,16 @@
 # Usage: new-project.sh [-n|--dry-run] PROJECT_NAME
 #   PROJECT_NAME: letters, digits, '_' and '-' only, e.g. 2026_rnaseq_screen
 set -euo pipefail
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+# Resolve symlinks so the script works when run via local/bin/ (see docs/02-directory-layout.md)
+SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 parse_common_flags "$@"
 
 name="${REST_ARGS[0]:-}"
 [[ -n "$name" ]] || die "usage: new-project.sh [-n] PROJECT_NAME"
 [[ "$name" =~ ^[A-Za-z0-9_-]+$ ]] || die "invalid project name: $name"
 
-template="$(cd "$(dirname "${BASH_SOURCE[0]}")/../templates/project" && pwd)"
+template="$(cd "$SCRIPT_DIR/../templates/project" && pwd)"
 proj="$GROUP_ROOT/projects/$name"
 work="$SCRATCH_ROOT/users/.$USER/$name"      # dot-link to users/<handle>
 
@@ -35,8 +37,7 @@ if [[ "$DRY_RUN" != 1 ]]; then
             rm -f "$f.bak"
         done
     chmod +x "$proj/run.sh"
-    chmod -R g+rwX "$proj"
-    chgrp -R "$UNIX_GROUP" "$proj" || warn "chgrp -R $UNIX_GROUP failed on $proj"
+    chmod -R g+rwX "$proj"      # group is inherited from the setgid parent
 fi
 
 info "Project : $proj"

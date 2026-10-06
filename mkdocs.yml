@@ -34,6 +34,9 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Getting started:
+    - First-time admin setup: setup-admin.md
+    - First-time user setup: setup-user.md
   - 1. Storage tiers: 01-storage-tiers.md
   - 2. Directory layout: 02-directory-layout.md
   - 3. Permissions: 03-permissions.md
@@ -44,3 +47,4 @@ nav:
   - 8. Publishing these docs: 08-publishing-docs.md
   - 9. Reference data: 09-references.md
   - 10. Usernames and handles: 10-user-names.md
+  - 11. Group shell setup: 11-shell-setup.md

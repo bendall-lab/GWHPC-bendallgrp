@@ -1,5 +1,5 @@
 # Source from ~/.bashrc or ~/.zshrc:
-#   source /GWSPH/groups/bendallgrp/software/workflows/GWHPC-bendallgrp/scripts/hpc-aliases.sh
+#   source /GWSPH/groups/bendallgrp/local/etc/hpc-aliases.sh
 # Shows human-readable handles in place of Linux usernames. Output only; nothing is modified.
 #
 #   hpc_filter      stdin filter: replaces whole-word Linux usernames with handles

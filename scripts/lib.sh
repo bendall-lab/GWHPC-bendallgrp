@@ -3,6 +3,7 @@
 GROUP_ROOT="${GROUP_ROOT:-/GWSPH/groups/bendallgrp}"     # NFS (Qumulo)
 SCRATCH_ROOT="${SCRATCH_ROOT:-/scratch/bendallgrp}"       # Lenovo DSS
 UNIX_GROUP="${UNIX_GROUP:-MG-bendallgrp}"                 # Unix group; differs from the directory name
+LOCAL_ROOT="${LOCAL_ROOT:-$GROUP_ROOT/local}"             # group-authored scripts/config (like /usr/local)
 DRY_RUN="${DRY_RUN:-0}"
 USER_MAP="${USER_MAP:-$GROUP_ROOT/admin/user_map.tsv}"    # linux_user<TAB>handle<TAB>full_name<TAB>added
 
@@ -19,13 +20,34 @@ run() {
     fi
 }
 
-# make_dir PATH MODE: create PATH with group ownership, setgid, and MODE
-# (e.g. 2775 group-writable, 2755 group-readable only, 2770 group-only)
+# Group ownership is never set with chgrp: the group and scratch roots were created by an
+# admin with group $UNIX_GROUP and the setgid bit, so everything made beneath them inherits it.
+
+# dir_group PATH: print the group name that owns PATH (GNU stat, then BSD stat)
+dir_group() { stat -c %G "$1" 2>/dev/null || stat -f %Sg "$1"; }
+
+# check_root PATH: require an admin-created root with the right group and the setgid bit
+check_root() {
+    local path="$1"
+    [[ -d "$path" ]] || die "$path does not exist; it must be created by an admin with group $UNIX_GROUP and setgid"
+    [[ "$(dir_group "$path")" == "$UNIX_GROUP" ]] || warn "$path has group $(dir_group "$path"), expected $UNIX_GROUP"
+    [[ -g "$path" ]] || warn "$path lacks the setgid bit, so new files will not inherit the group"
+}
+
+# make_dir PATH MODE: create PATH (group inherited via setgid) and set MODE
+# (e.g. 2775 group-writable, 2755 group-readable only, 2770 group-only).
+# Existing directories owned by someone else keep their mode.
 make_dir() {
     local path="$1" mode="$2"
     run mkdir -p "$path"
-    run chgrp "$UNIX_GROUP" "$path" || warn "chgrp $UNIX_GROUP failed on $path"
+    if [[ -d "$path" && ! -O "$path" ]]; then
+        info "not owner of $path, leaving its mode as is"
+        return 0
+    fi
     run chmod "$mode" "$path"
+    if [[ "$DRY_RUN" != 1 && "$(dir_group "$path")" != "$UNIX_GROUP" ]]; then
+        warn "$path has group $(dir_group "$path"), expected $UNIX_GROUP (is its parent setgid?)"
+    fi
 }
 
 parse_common_flags() {

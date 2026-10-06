@@ -6,7 +6,7 @@
 | Group scratch | `/scratch/bendallgrp` | Lenovo DSS | Working space, not an archive | Raw inputs staged for analysis, intermediates (BAM/VCF), Snakemake working dirs |
 | Node-local | `/local` (**VERIFY**) | 800 GB SSD per node, shared with boot | Wiped when the job ends | Temp files for a single job (sort buffers, extraction) |
 
-Pegasus documents the 800 GB onboard SSD ("used for boot and local scratch space") but not its mount point. Run `scripts/check-node-storage.sh` on a compute node (see the header of that script for an `srun` one-liner) to confirm whether `/local` exists and is writable. Also check whether `$TMPDIR` is set inside jobs.
+Pegasus documents the 800 GB onboard SSD ("used for boot and local scratch space") but not its mount point. The group admin's own `~/.bashrc` sets `TMPDIR=/local`, so `/local` is the working assumption. Run `scripts/check-node-storage.sh` on a compute node (see the header of that script for an `srun` one-liner) to confirm whether `/local` exists and is writable. Also check whether `$TMPDIR` is set inside jobs.
 
 Reference data lives in both tiers: the master on NFS and a purge-tolerant mirror on DSS ([Reference data](09-references.md)).
 

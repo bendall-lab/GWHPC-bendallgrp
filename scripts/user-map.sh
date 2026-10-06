@@ -8,7 +8,9 @@
 #   user-map.sh list
 # Env overrides: USER_MAP, GROUP_ROOT, UNIX_GROUP
 set -euo pipefail
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+# Resolve symlinks so the script works when run via local/bin/ (see docs/02-directory-layout.md)
+SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
 cmd="${1:-}"; shift || true
 
@@ -27,8 +29,7 @@ case "$cmd" in
             run mkdir -p "$(dirname "$USER_MAP")"
             if [[ "$DRY_RUN" != 1 ]]; then
                 printf '# linux_user\thandle\tfull_name\tadded\n' > "$USER_MAP"
-                chgrp "$UNIX_GROUP" "$USER_MAP" 2>/dev/null || warn "chgrp $UNIX_GROUP failed on $USER_MAP"
-                chmod 664 "$USER_MAP"
+                chmod 664 "$USER_MAP"      # group inherited from setgid admin/
             fi
         fi
         line="$(printf '%s\t%s\t%s\t%s' "$linux_user" "$handle" "$full" "$(date +%F)")"

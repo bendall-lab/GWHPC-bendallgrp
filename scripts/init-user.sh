@@ -7,7 +7,9 @@
 #
 # Usage: init-user.sh [-n|--dry-run] [LINUX_USER]     (default: $USER)
 set -euo pipefail
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+# Resolve symlinks so the script works when run via local/bin/ (see docs/02-directory-layout.md)
+SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 parse_common_flags "$@"
 
 linux_user="${REST_ARGS[0]:-$USER}"
@@ -30,4 +32,4 @@ info "Created users/$handle (+ .$linux_user link) on NFS and scratch"
 if [[ "$linux_user" != "$USER" ]]; then
     warn "directories are owned by $USER, not $linux_user; have $linux_user run this script, or chown as root"
 fi
-info "Reminder: set 'umask 002' in ~/.bashrc so new files stay group-accessible."
+info "Reminder: run scripts/install-shell-setup.sh (sets umask 002 so new files stay group-accessible)."

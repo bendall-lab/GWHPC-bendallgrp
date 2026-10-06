@@ -33,10 +33,10 @@ The same pair exists under `/scratch/bendallgrp/users/`. Scripts and templates u
 
 ## Readable `ls` and `squeue`
 
-`scripts/hpc-aliases.sh` provides output filters. Source it from `~/.bashrc` (clone this repo to `software/workflows/GWHPC-bendallgrp` so everyone shares one copy):
+`scripts/hpc-aliases.sh` provides output filters. They are loaded for you by the [group shell setup](11-shell-setup.md); to use them on their own, source the file from `~/.bashrc`:
 
 ```bash
-source /GWSPH/groups/bendallgrp/software/workflows/GWHPC-bendallgrp/scripts/hpc-aliases.sh
+source /GWSPH/groups/bendallgrp/local/etc/hpc-aliases.sh
 ```
 
 | Function | Use |
@@ -48,9 +48,6 @@ source /GWSPH/groups/bendallgrp/software/workflows/GWHPC-bendallgrp/scripts/hpc-
 
 Only whole tokens that equal a Linux username are replaced, so dot-links and handles in paths are untouched. A longer handle shifts columns slightly. The wrappers only change what you see; files keep their real owners.
 
-## New member checklist
+## Adding a member
 
-1. RTS adds them to the Unix group ([permissions](03-permissions.md)).
-2. `scripts/user-map.sh add <linux_user> <handle> "<Full Name>"`
-3. The member runs `scripts/init-user.sh` themselves, so the directories are owned by them.
-4. The member adds `umask 002` and the `source ...hpc-aliases.sh` line to `~/.bashrc`.
+The step-by-step checklist is in [First-time admin setup](setup-admin.md#add-a-new-member) (admin side) and [First-time user setup](setup-user.md) (member side).

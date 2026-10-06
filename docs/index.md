@@ -2,6 +2,10 @@
 
 How the Bendall group organizes data, software, and workflows on GW's Pegasus cluster.
 
+**Getting started:** [First-time admin setup](setup-admin.md) (group admin, once) and [First-time user setup](setup-user.md) (each new member).
+
+**Reference:**
+
 1. [Storage tiers](01-storage-tiers.md): what lives where and why
 2. [Directory layout](02-directory-layout.md): group, scratch, and per-project structure
 3. [Permissions and access](03-permissions.md): groups, setgid, umask, read-only data
@@ -12,6 +16,7 @@ How the Bendall group organizes data, software, and workflows on GW's Pegasus cl
 8. [Publishing these docs](08-publishing-docs.md): GitHub Pages options
 9. [Reference data](09-references.md): referenceDB master on NFS, scratch mirror, staging rule
 10. [Usernames and handles](10-user-names.md): username map, user directory naming, readable `ls`
+11. [Group shell setup](11-shell-setup.md): shared `.bashrc` snippet, `umask`, shortcuts
 
 Facts marked **VERIFY** have not been confirmed against GW documentation or on the cluster.
 

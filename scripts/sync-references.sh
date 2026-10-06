@@ -7,7 +7,9 @@
 #   REF: path under the refDB root (e.g. GRCh38). Default: sync the whole tree.
 # Env overrides: MASTER_REFS, MIRROR_REFS (plus GROUP_ROOT, SCRATCH_ROOT, UNIX_GROUP)
 set -euo pipefail
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+# Resolve symlinks so the script works when run via local/bin/ (see docs/02-directory-layout.md)
+SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 parse_common_flags "$@"
 
 MASTER_REFS="${MASTER_REFS:-$GROUP_ROOT/shared_resources/references/refDB}"

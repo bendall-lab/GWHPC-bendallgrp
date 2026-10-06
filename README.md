@@ -10,6 +10,9 @@ Group directory conventions, tooling, and documentation for the Bendall group on
 
 Start at [docs/index.md](docs/index.md):
 
+- **Getting started:** [First-time admin setup](docs/setup-admin.md), [First-time user setup](docs/setup-user.md)
+- **Reference:**
+
 1. [Storage tiers](docs/01-storage-tiers.md)
 2. [Directory layout](docs/02-directory-layout.md)
 3. [Permissions and access](docs/03-permissions.md)
@@ -20,10 +23,11 @@ Start at [docs/index.md](docs/index.md):
 8. [Publishing these docs](docs/08-publishing-docs.md)
 9. [Reference data](docs/09-references.md)
 10. [Usernames and handles](docs/10-user-names.md)
+11. [Group shell setup](docs/11-shell-setup.md)
 
 ## Contents
 
-- `scripts/`: `init-group-dir.sh`, `init-user.sh`, `new-project.sh`, `check-node-storage.sh`, `sync-references.sh`, `user-map.sh`, `hpc-aliases.sh` (sourced)
+- `scripts/`: `init-group-dir.sh`, `link-local.sh`, `init-user.sh`, `new-project.sh`, `check-node-storage.sh`, `sync-references.sh`, `user-map.sh`, `install-shell-setup.sh`, `group-bashrc.sh` and `hpc-aliases.sh` (both sourced)
 - `templates/project/`: Snakemake 9+ project skeleton with a SLURM profile and a reference staging rule
 
 ## Quick start

@@ -2,7 +2,9 @@
 # Report which storage tiers are visible and writable. Run it ON A COMPUTE NODE
 # (not a login node) to confirm node-local scratch, e.g.:
 #   srun --partition=cpu --cpus-per-task=1 --mem=1G --time=0-00:05:00 scripts/check-node-storage.sh
-source "$(dirname "${BASH_SOURCE[0]}")/lib.sh"
+# Resolve symlinks so the script works when run via local/bin/ (see docs/02-directory-layout.md)
+SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
 echo "host: $(hostname)   job: ${SLURM_JOB_ID:-none}   TMPDIR=${TMPDIR:-<unset>}"
 echo
