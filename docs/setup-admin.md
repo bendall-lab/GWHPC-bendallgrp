@@ -103,7 +103,7 @@ These are marked **VERIFY** in the docs. Replace each marker with the real answe
 | Whether ACLs can be set from Pegasus | [Permissions](03-permissions.md) |
 | Whether `~/.bash_profile` sources `~/.bashrc` on login nodes | [Group shell setup](11-shell-setup.md) |
 | Whether cron and `tmux`/`screen` are available on login nodes | [Reference data](09-references.md), [Group shell setup](11-shell-setup.md) |
-| Whether a Slurm `--account` is ever needed | [SLURM and partitions](05-slurm-and-partitions.md) |
+| Whether each new member gets a Slurm account association (accounting enforces associations; yours is `cbi`, and there is no `bendallgrp` account that we know of) | [SLURM and partitions](05-slurm-and-partitions.md) |
 
 ## Routine admin tasks
 

@@ -26,7 +26,7 @@ See `templates/project/profiles/slurm/config.yaml`. Key points:
 
 - `slurm_partition`, `runtime` (minutes), `mem_mb`, `cpus_per_task` are the plugin's resource names. Set defaults under `default-resources` and per-rule overrides under `set-resources`.
 - `latency-wait: 60` covers file-visibility lag between nodes.
-- No `slurm_account` is set because none is required.
+- No `slurm_account` is set: jobs run under each user's default Slurm association, so that association must exist ([First-time admin setup](setup-admin.md)).
 - GPU rules need `slurm_partition: gpu` plus `slurm_extra: "'--gres=gpu:<TYPE>:1'"`.
 
 ## Local scratch

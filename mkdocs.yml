@@ -37,6 +37,9 @@ nav:
   - Getting started:
     - First-time admin setup: setup-admin.md
     - First-time user setup: setup-user.md
+    - "Admin setup (apps)": setup-admin-apps.md
+  - Installed apps:
+    - Overview and conventions: apps/index.md
   - 1. Storage tiers: 01-storage-tiers.md
   - 2. Directory layout: 02-directory-layout.md
   - 3. Permissions: 03-permissions.md
