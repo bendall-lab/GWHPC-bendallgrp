@@ -24,6 +24,18 @@ export PATH
 
 case $- in *i*) ;; *) return 0 2>/dev/null || true ;; esac   # interactive shells only below
 
+# Group modulefiles (docs/apps/index.md). Cheap and harmless: it only extends MODULEPATH.
+# Loading anything is up to the member, except the opt-in below.
+if type module >/dev/null 2>&1 && [ -d "$BENDALLGRP_ROOT/software/modulefiles" ]; then
+    module use "$BENDALLGRP_ROOT/software/modulefiles"
+    # Opt-in: set BENDALLGRP_LOAD_CONDA=1 in ~/.bashrc BEFORE the group block to load Miniforge
+    # (conda, mamba, and the base environment active) in every interactive shell. Off by default
+    # because it would clash with a member's own conda setup (conda init block, RTS conda module).
+    if [ "${BENDALLGRP_LOAD_CONDA:-0}" = 1 ]; then
+        module load miniforge3
+    fi
+fi
+
 # Basic tools: load a module only when the command is not already on PATH
 if type module >/dev/null 2>&1; then
     command -v sbatch >/dev/null 2>&1 || module load slurm 2>/dev/null

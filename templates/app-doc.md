@@ -3,7 +3,7 @@
 - **What it is:** one line, with the homepage URL
 - **Module:** `<tool>/<version>`
 - **Install tree:** `/GWSPH/groups/bendallgrp/software/<tool>/<version>`
-- **Modulefile:** `/GWSPH/groups/bendallgrp/software/modulefiles/<tool>/<version>.lua`
+- **Modulefile:** `modulefiles/<tool>/<version>.lua` in this repository, published to `/GWSPH/groups/bendallgrp/software/modulefiles/<tool>/<version>.lua`
 - **Maintainer:**
 
 ## Using it
@@ -32,7 +32,13 @@ chmod -R go-w <version>           # read-only for members
 
 ## Modulefile
 
-Copy `templates/modulefiles/tool.lua`, fill in the placeholders, and save as `software/modulefiles/<tool>/<version>.lua`.
+Copy `templates/modulefiles/tool.lua`, fill in the placeholders, and commit it as `modulefiles/<tool>/<version>.lua` in this repository. Then publish it on the cluster:
+
+```bash
+cd /GWSPH/groups/bendallgrp/software/tools/GWHPC-bendallgrp.git && git pull
+scripts/install-modulefiles.sh --dry-run
+scripts/install-modulefiles.sh
+```
 
 ## Verify
 

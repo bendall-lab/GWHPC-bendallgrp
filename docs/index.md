@@ -2,7 +2,7 @@
 
 How the Bendall group organizes data, software, and workflows on GW's Pegasus cluster.
 
-**Getting started:** [First-time admin setup](setup-admin.md) (group admin, once), [Admin setup: app installs](setup-admin-apps.md) (Miniforge and other group-installed software), and [First-time user setup](setup-user.md) (each new member). Installed-app conventions are in [Installed apps](apps/index.md).
+**Getting started:** [First-time admin setup](setup-admin.md) (group admin, once) and [First-time user setup](setup-user.md) (each new member). Group-installed software, its modulefiles and install procedures are under [Installed apps](apps/index.md) (start with [Miniforge3](apps/miniforge3.md)).
 
 **Reference:**
 

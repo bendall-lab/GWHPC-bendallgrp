@@ -113,6 +113,19 @@ These are marked **VERIFY** in the docs. Replace each marker with the real answe
 2. Add them to the map, from the checkout: `scripts/user-map-add.sh <linux_user> <handle> "<Full Name>"`.
 3. Tell them to follow [First-time user setup](setup-user.md). They run `init-user.sh` themselves so their directories are owned by them.
 
+### Publish or update a modulefile
+
+Modulefiles live in the repo under `modulefiles/` and are copied (not linked) to `software/modulefiles/`, so members only see a change when you publish it:
+
+```bash
+cd /GWSPH/groups/bendallgrp/software/tools/GWHPC-bendallgrp.git
+git pull
+scripts/install-modulefiles.sh --dry-run
+scripts/install-modulefiles.sh
+```
+
+See [Installed apps](apps/index.md) and, for an example, [Miniforge3](apps/miniforge3.md).
+
 ### Update the scripts or docs
 
 ```bash

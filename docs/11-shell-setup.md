@@ -50,6 +50,8 @@ Interactive shells also get:
 
 Interactive shells also:
 
+- add the group modulefiles to `MODULEPATH` (`module use .../software/modulefiles`), so `module avail` lists the group's modules;
+- with `BENDALLGRP_LOAD_CONDA=1` (set in `~/.bashrc` before the group block), run `module load miniforge3`, which gives `conda`, `mamba` and an active base environment. Off by default so it cannot clash with a member's own conda setup;
 - load the `slurm`, `git` and `curl` modules, but only if `sbatch`, `git` or `curl` isn't already on `PATH`;
 - set `LMOD_COLORIZE=YES`;
 - set `TMPDIR=/local` when `/local` is writable and `TMPDIR` is unset or `/tmp`. A `TMPDIR` that Slurm sets for a job is never overridden. Jobs share `/local`, so create a private directory with `mktemp -d -p "$TMPDIR"` and remove it when the job ends.
