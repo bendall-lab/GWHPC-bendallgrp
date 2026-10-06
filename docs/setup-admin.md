@@ -55,14 +55,17 @@ This symlinks the scripts members run into `local/bin/` and the files they sourc
 The map from Linux usernames to handles lives only on the cluster, in `admin/user_map.tsv` ([Usernames and handles](10-user-names.md)). Add yourself and each member:
 
 ```bash
-S=/GWSPH/groups/bendallgrp/local/bin
-$S/user-map.sh add <linux_user> <handle> "<Full Name>"
-$S/user-map.sh list
+cd /GWSPH/groups/bendallgrp/software/tools/GWHPC-bendallgrp.git
+scripts/user-map-add.sh <linux_user> <handle> "<Full Name>"
+cat /GWSPH/groups/bendallgrp/admin/user_map.tsv     # or `user-map-list` once step 5 is done
 ```
+
+`user-map-add.sh` is admin-only and is not linked into `local/bin`. Members only read the map, through the `user-map-lookup` and `user-map-list` shell functions. The map file is writable only by you.
 
 ## 5. Set up your own account
 
 ```bash
+S=/GWSPH/groups/bendallgrp/local/bin
 $S/install-shell-setup.sh --dry-run
 $S/install-shell-setup.sh
 source ~/.bashrc
@@ -107,7 +110,7 @@ These are marked **VERIFY** in the docs. Replace each marker with the real answe
 ### Add a new member
 
 1. RTS adds them to the Unix group `MG-bendallgrp` (request through the IT Help portal or rtshelp@gwu.edu).
-2. Add them to the map: `user-map.sh add <linux_user> <handle> "<Full Name>"`.
+2. Add them to the map, from the checkout: `scripts/user-map-add.sh <linux_user> <handle> "<Full Name>"`.
 3. Tell them to follow [First-time user setup](setup-user.md). They run `init-user.sh` themselves so their directories are owned by them.
 
 ### Update the scripts or docs

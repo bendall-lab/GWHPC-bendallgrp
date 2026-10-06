@@ -31,7 +31,7 @@ To remove it, delete those three lines. If your login shell reads `~/.bash_profi
 | `BENDALLGRP_SCRATCH` | `/scratch/bendallgrp` |
 | `BENDALLGRP_LOCAL`, `BENDALLGRP_TOOLS` | `local/` and the repo checkout |
 | `BENDALLGRP_HOME`, `BENDALLGRP_SCRATCH_HOME` | your personal directories, via the `users/.<linux_user>` dot-links |
-| `PATH` | `local/bin` appended, so `init-user.sh`, `new-project.sh`, `user-map.sh`, `sync-references.sh` etc. run from anywhere |
+| `PATH` | `local/bin` appended, so `init-user.sh`, `new-project.sh`, `sync-references.sh` etc. run from anywhere |
 
 Interactive shells also get:
 
@@ -41,9 +41,12 @@ Interactive shells also get:
 | `cdme`, `cdsme` | go to your directory on NFS, on scratch |
 | `cdproj`, `cdref` | go to `projects/`, the refDB master |
 | `lsh`, `sqh`, `hpc_filter`, `hpc_whoami` | show handles instead of Linux usernames |
+| `user-map-lookup NAME`, `user-map-list` | look up a handle or username; print the whole map |
 | `qstat` | your queued and running jobs (job id, name, state, elapsed time, partition, start, reason) |
 | `qcheck [-j IDS]` | your recent job history (`sacct` with state, partition, start, end, nodes) |
 | `qstate JOBID` | one job's state, lowercase, for scripts |
+
+`HPC_WRAP_LS=1` (set before the group block in `~/.bashrc`) additionally makes plain `ls` show handles in long listings; see [Usernames and handles](10-user-names.md).
 
 Interactive shells also:
 

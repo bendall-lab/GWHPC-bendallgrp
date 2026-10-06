@@ -16,10 +16,13 @@ u0000001	jane-doe	Jane Doe	2026-01-01
 - Handles are lowercase letters, digits, `_` and `-`, and unique. Linux usernames are unique too.
 
 ```bash
-scripts/user-map.sh add u0000001 jane-doe "Jane Doe"
-scripts/user-map.sh lookup jane-doe      # -> u0000001
-scripts/user-map.sh lookup u0000001      # -> jane-doe
-scripts/user-map.sh list
+# admin only, from the checkout (not linked into local/bin):
+scripts/user-map-add.sh u0000001 jane-doe "Jane Doe"
+
+# anyone (shell functions from the group shell setup):
+user-map-lookup jane-doe                 # -> u0000001
+user-map-lookup u0000001                 # -> jane-doe
+user-map-list
 ```
 
 ## Directory convention
@@ -45,6 +48,18 @@ source /GWSPH/groups/bendallgrp/local/etc/hpc-aliases.sh
 | `sqh [args]` | `squeue` with usernames mapped |
 | `hpc_filter` | stdin filter; works with any command, e.g. `sacct ... \| hpc_filter` |
 | `hpc_whoami` | your handle |
+| `user-map-lookup NAME` | the handle for a Linux username, or the username for a handle |
+| `user-map-list` | the whole map as a table |
+
+### Optional: make plain `ls` show handles
+
+Set `HPC_WRAP_LS=1` in your `~/.bashrc` **before** the group shell setup block:
+
+```bash
+export HPC_WRAP_LS=1
+```
+
+On a terminal, long listings (`ls -l`, `-la`, `-al`, `-g`, `-o`, `--format=long`) then show handles; every other `ls`, and every `ls` in a pipe or script, is the normal `ls` and keeps its columns and colors. The wrapper keeps `ls`'s exit status and replaces any `alias ls=...` you had. Run `command ls` to bypass it. Leave `HPC_WRAP_LS` unset and `lsh` remains the explicit alternative.
 
 Only whole tokens that equal a Linux username are replaced, so dot-links and handles in paths are untouched. A longer handle shifts columns slightly. The wrappers only change what you see; files keep their real owners.
 

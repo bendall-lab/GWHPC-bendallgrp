@@ -13,7 +13,7 @@ SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null ||
 source "$SCRIPT_DIR/lib.sh"
 parse_common_flags "$@"
 
-BIN_SCRIPTS=(init-user.sh new-project.sh user-map.sh sync-references.sh check-node-storage.sh install-shell-setup.sh)
+BIN_SCRIPTS=(init-user.sh new-project.sh sync-references.sh check-node-storage.sh install-shell-setup.sh)
 ETC_SCRIPTS=(group-bashrc.sh hpc-aliases.sh)
 
 expected="$GROUP_ROOT/software/tools/GWHPC-bendallgrp.git"
@@ -30,6 +30,11 @@ link() {   # link TARGET_DIR NAME
     [[ -f "$src" ]] || die "missing script: $src"
     run ln -sfn "$src" "$dir/$name"
 }
+
+# Remove dead links left behind by renamed or removed scripts
+for f in "$LOCAL_ROOT"/bin/* "$LOCAL_ROOT"/etc/*; do
+    if [[ -L "$f" && ! -e "$f" ]]; then run rm "$f"; fi
+done
 
 for s in "${BIN_SCRIPTS[@]}"; do link "$LOCAL_ROOT/bin" "$s"; done
 for s in "${ETC_SCRIPTS[@]}"; do link "$LOCAL_ROOT/etc" "$s"; done

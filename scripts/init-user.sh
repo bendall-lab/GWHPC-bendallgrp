@@ -3,7 +3,7 @@
 # plus a dot-symlink named after the Linux username:
 #   users/<handle>/            (real directory)
 #   users/.<linux_user>  ->  <handle>
-# The handle comes from the user map (scripts/user-map.sh add ... first).
+# The handle comes from the user map (the admin runs scripts/user-map-add.sh first).
 #
 # Usage: init-user.sh [-n|--dry-run] [LINUX_USER]     (default: $USER)
 set -euo pipefail
@@ -14,7 +14,7 @@ parse_common_flags "$@"
 
 linux_user="${REST_ARGS[0]:-$USER}"
 handle="$(map_handle_for "$linux_user" || true)"
-[[ -n "$handle" ]] || die "no handle for $linux_user in $USER_MAP; run: scripts/user-map.sh add $linux_user HANDLE"
+[[ -n "$handle" ]] || die "no handle for $linux_user in $USER_MAP; ask the group admin to add you (user-map-add.sh)"
 
 for root in "$GROUP_ROOT/users" "$SCRATCH_ROOT/users"; do
     make_dir "$root/$handle" 2775

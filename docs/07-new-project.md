@@ -6,7 +6,7 @@ All scripts live in `scripts/`. They accept `-n`/`--dry-run` and the environment
 |---|---|---|
 | `init-group-dir.sh` | group admin, once | creates the group and scratch layout (group inherited via setgid) |
 | `link-local.sh` | group admin | symlinks the user-facing scripts into `local/bin` and `local/etc` |
-| `user-map.sh add\|lookup\|list` | group admin | maintains the Linux username to handle map ([details](10-user-names.md)) |
+| `user-map-add.sh` | group admin | adds a member to the Linux username to handle map; not linked into `local/bin` ([details](10-user-names.md)) |
 | `init-user.sh [linux_user]` | each new member (after being added to the map) | creates `users/<handle>` and the `.<linux_user>` link on NFS and scratch |
 | `new-project.sh NAME` | any member | copies `templates/project/` to `projects/NAME`, fills in paths, creates the scratch workdir |
 | `install-shell-setup.sh` | each new member | adds the group shell setup to `~/.bashrc` ([details](11-shell-setup.md)) |
@@ -23,7 +23,6 @@ First-time setup, and what to run after adding a script, is in [First-time admin
 
 ```bash
 # with local/bin on your PATH (see the shell setup doc):
-user-map.sh add $USER <handle> "<Full Name>"   # once per member (or ask the admin)
 init-user.sh                         # once per member
 new-project.sh 2026_rnaseq           # per project
 
