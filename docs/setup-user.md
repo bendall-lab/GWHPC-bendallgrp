@@ -26,7 +26,7 @@ If `MG-bendallgrp` is missing from `id`, log out and back in; if it is still mis
 source ~/.bashrc
 ```
 
-This adds three lines to your `~/.bashrc`. It sets `umask 002` so files you create are group-writable, puts the group commands on your `PATH`, and adds shortcuts such as `cdg`, `cdme`, `qstat` and `lsh`. The full list is in [Group shell setup](11-shell-setup.md). To undo it, delete those three lines.
+This adds a short marked block to your `~/.bashrc` (and creates `~/.bash_profile` if you have no login-shell file, so login shells read it). It sets `umask 002` so files you create are group-writable, puts the group commands on your `PATH`, and adds shortcuts such as `cdg`, `cdme`, `qstat` and `lsh`. The full list is in [Group shell setup](11-shell-setup.md). To undo it, delete that block.
 
 ## 2. Create your directories
 
@@ -75,5 +75,5 @@ Do not run heavy parallel I/O against the group directory, and keep anything irr
 
 ## Getting help
 
-- **Cluster problems:** rtshelp@gwu.edu, office hours Tuesday and Thursday 12:30-2:30 PM. Include the job ID and submission script ([SLURM and partitions](05-slurm-and-partitions.md)).
+- **Cluster problems:** hpchelp@gwu.edu, office hours Tuesday and Thursday 12:30-2:30 PM. Include the job ID and submission script ([SLURM and partitions](05-slurm-and-partitions.md)).
 - **Group setup problems:** ask the group admin.

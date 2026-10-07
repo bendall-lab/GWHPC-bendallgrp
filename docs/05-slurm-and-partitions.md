@@ -12,7 +12,7 @@ Snapshot from `sinfo -s` on 2026-10-06 (the partitions a regular user sees):
 | `gpu` | 7 days | 40 | all GPU jobs; GPU types `v100` (several node shapes) and `a100` (8 per node, 2 nodes) |
 | `superChip` | 7 days | 8 | Grace Hopper, `gh200` (1 GPU per node); the guide calls this `basestar` |
 | `viz` | 7 days | 2 | visualization; `l40s` GPUs (2 per node) |
-| `nano` | 30 minutes | 4 | very short jobs; the only short-limit partition left, so the natural choice for quick tests now that `debug` is gone (**VERIFY** this is its intended use) |
+| `nano` | 30 minutes | 4 | very short jobs; the only short-limit partition left, so the choice for quick tests now that `debug` is gone |
 | `deus` | unlimited | 2 | purpose unknown; both nodes were down in the snapshot |
 
 `sinfo -a` also lists partitions that were hidden from this account: `highMemInt` (one node, 14 days), `purge`, `secret`, and several cloud partitions (`awscpu`, `awsgpu`, `awsg6e12xl`, `awsg6e4xl`, `awsr7a48xl`, limits of 6 hours to 1 day, nodes that start on demand). Whether a group member can use them depends on the partition's access rules; run `sinfo -s` as a member to see what they get.
@@ -26,7 +26,7 @@ sinfo -s                      # partitions you can see, with node counts
 sinfo -o "%P %G %l"           # partition, GPU types, time limit
 ```
 
-Slurm accounting enforces associations, so every user needs an account association even though `--account` is not normally typed. See [First-time admin setup](setup-admin.md).
+Slurm accounting enforces associations, so every user needs an account association even though `--account` is not normally typed. Some members are associated with the `cbi` account and the rest with `bendallgrp`; `sacctmgr show assoc user=$USER format=user,account` shows yours. See [First-time admin setup](setup-admin.md).
 
 ## Rules that changed
 
@@ -54,4 +54,4 @@ Slurm accounting enforces associations, so every user needs an account associati
 sacct -X -j <jobid> -o ReqTRES%50,AllocTRES%50
 ```
 
-Compare requested to allocated resources, then check the `.out`/`.err` files. Support: the login-node motd says hpchelp@gwu.edu; the Rev B guide says rtshelp@gwu.edu (**VERIFY** which is current). Office hours Tue/Thu 12:30-2:30 PM.
+Compare requested to allocated resources, then check the `.out`/`.err` files. Support: hpchelp@gwu.edu (rtshelp@gwu.edu, which the Rev B guide gives, reaches the same ticketing system). Office hours Tue/Thu 12:30-2:30 PM.

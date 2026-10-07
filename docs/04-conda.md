@@ -22,7 +22,7 @@ Snakemake builds per-rule environments from `envs/*.yaml`. The profile points `c
 
 Conda caches and environments contain very many small files, which counts against inode quotas and is slow on NFS.
 
-- **VERIFY** the inode limits on the group directory and home directories.
+- No inode limits are published for the group directory or home directories, but very many small files are still slow on NFS.
 - A per-user package cache in the user's own directory avoids permission and locking conflicts between members; a single shared writable cache is convenient but riskier with concurrent installs. Decide and record here:
 
 ```yaml

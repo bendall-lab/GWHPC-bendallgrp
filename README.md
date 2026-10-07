@@ -4,7 +4,7 @@ Group directory conventions, tooling, and documentation for the Bendall group on
 
 - Group directory (NFS, Qumulo): `/GWSPH/groups/bendallgrp`
 - Scratch (Lenovo DSS): `/scratch/bendallgrp`
-- Node-local scratch: `/local` (unverified)
+- Node-local scratch: `/local`
 
 ## Documentation
 

@@ -101,7 +101,7 @@ new-project.sh --dry-run test_project
 srun --partition=cpu --cpus-per-task=1 --mem=1G --time=0-00:05:00 check-node-storage.sh
 ```
 
-If `/local` exists and is writable on compute nodes, update the **VERIFY** note in [Storage tiers](01-storage-tiers.md) and enable `tmpdir` in `templates/project/profiles/slurm/config.yaml`.
+`/local` is the node-local disk. If it is also writable on compute nodes, enable `tmpdir` in `templates/project/profiles/slurm/config.yaml`.
 
 ## 7. Reference data (optional, when ready)
 
@@ -113,19 +113,15 @@ These are marked **VERIFY** in the docs. Replace each marker with the real answe
 
 | Question | Where it is recorded |
 |---|---|
-| Scratch purge policy and whether it is access-time based | [Storage tiers](01-storage-tiers.md), [Reference data](09-references.md) |
-| Group quotas (space and inodes) on NFS and scratch | [Storage tiers](01-storage-tiers.md), [Conda](04-conda.md) |
-| Snapshot and backup policy for the group directory | [Storage tiers](01-storage-tiers.md) |
-| Whether ACLs can be set from Pegasus | [Permissions](03-permissions.md) |
-| Whether `~/.bash_profile` sources `~/.bashrc` on login nodes | [Group shell setup](11-shell-setup.md) |
-| Whether cron and `tmux`/`screen` are available on login nodes | [Reference data](09-references.md), [Group shell setup](11-shell-setup.md) |
-| Whether each new member gets a Slurm account association (accounting enforces associations; yours is `cbi`, and there is no `bendallgrp` account that we know of) | [SLURM and partitions](05-slurm-and-partitions.md) |
+| Snapshot and backup policy for the group directory (believed to be none) | [Storage tiers](01-storage-tiers.md) |
+| Whether Slurm's `scrontab` is enabled (cron itself does not work) | [Reference data](09-references.md) |
+| Which Slurm account new members get. Accounting enforces associations; two members (including the admin) are in `cbi` and the rest in `bendallgrp`, so new members are presumed `bendallgrp`. Check with `sacctmgr show assoc user=<user> format=user,account` after RTS adds them | [SLURM and partitions](05-slurm-and-partitions.md) |
 
 ## Routine admin tasks
 
 ### Add a new member
 
-1. RTS adds them to the Unix group `MG-bendallgrp` (request through the IT Help portal or rtshelp@gwu.edu).
+1. RTS adds them to the Unix group `MG-bendallgrp` (request through the IT Help portal or hpchelp@gwu.edu).
 2. Add them to the map, from the checkout: `scripts/user-map-add.sh <linux_user> <handle> "<Full Name>" <email> [user|admin]`.
 3. Tell them to follow [First-time user setup](setup-user.md). They run `init-user.sh` themselves so their directories are owned by them.
 

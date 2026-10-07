@@ -26,7 +26,9 @@ Both options are off by default. To enable one, remove the leading `# ` from its
 
 Re-running the script replaces the block with the current version and keeps any option you have enabled. It saves the previous file as `~/.bashrc.bak` first (overwritten on each re-run) and stops without changing anything if the block's end line is missing.
 
-To uninstall, delete the block, from the `# >>>` line to the `# <<<` line. If your login shell reads `~/.bash_profile` and not `~/.bashrc`, make sure `.bash_profile` sources `.bashrc` (**VERIFY** on Pegasus login nodes).
+Login shells read `~/.bash_profile`, not `~/.bashrc`, so the script also checks that your login file sources `.bashrc`. It creates `~/.bash_profile` (containing `if [ -f ~/.bashrc ]; then . ~/.bashrc; fi`) when you have no `.bash_profile`, `.bash_login` or `.profile`. If one exists but doesn't mention `.bashrc`, the script warns and prints the lines to add; it never edits an existing login file.
+
+To uninstall, delete the block, from the `# >>>` line to the `# <<<` line.
 
 ## What it sets
 
@@ -92,4 +94,4 @@ The group file deliberately leaves prompts and editing features to each member. 
 - **[starship](https://starship.rs/):** a fast prompt that works in bash. Install with the script's `-b` option into `~/.local/bin`, then add `eval "$(starship init bash)"` to `~/.bashrc`. A prompt that runs `git status` in a huge repository on NFS or scratch can lag, so use starship's `command_timeout` setting or disable the git module for those paths.
 - **[fzf](https://github.com/junegunn/fzf) and [zoxide](https://github.com/ajeetdsouza/zoxide):** fuzzy `Ctrl-R` history search and a `z`-style directory jumper. Source fzf's bash key bindings in `~/.bashrc`; initialize zoxide with `eval "$(zoxide init bash)"` as the last line.
 - **[ble.sh](https://github.com/akinomyoga/ble.sh):** zsh/fish-style autosuggestions and syntax highlighting for bash itself (bash 4.0 or newer recommended). Source it near the top of `~/.bashrc` and attach it at the end.
-- **`tmux`:** keep long-running sessions, such as a Snakemake `run.sh`, alive on a login node. **VERIFY** that `tmux` or `screen` is available on Pegasus (or install it under `~/.local`).
+- **`tmux`:** keep long-running sessions, such as a Snakemake `run.sh`, alive on a login node. `tmux` is installed on Pegasus.
