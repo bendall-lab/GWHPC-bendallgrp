@@ -12,6 +12,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
 source "$SCRIPT_DIR/lib.sh"
 parse_common_flags "$@"
+require_admin
 
 BIN_SCRIPTS=(init-user.sh new-project.sh sync-references.sh check-node-storage.sh install-shell-setup.sh)
 ETC_SCRIPTS=(group-bashrc.sh hpc-aliases.sh)

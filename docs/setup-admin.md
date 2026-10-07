@@ -39,6 +39,20 @@ rm -rf ~/GWHPC-bendallgrp                  # the temporary clone
 
 You own this checkout and are the only one who runs `git pull` in it. Members never write there.
 
+## 2a. Bootstrap the user map with yourself as admin
+
+`link-local.sh`, `user-map-add.sh` and `install-modulefiles.sh` are admin-only: each checks that your Linux username (`whoami`) is listed with role `admin` in `admin/user_map.tsv`, and exits otherwise. `init-group-dir.sh` is not checked, because it is what creates `admin/`. The map does not exist yet, so write the first line by hand (once); after that, use `user-map-add.sh` for everyone else, including further admins.
+
+```bash
+cd /GWSPH/groups/bendallgrp/admin
+printf '# linux_user\thandle\tfull_name\tadded\temail\trole\n' > user_map.tsv
+printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(whoami)" <your-handle> "<Your Name>" "$(date +%F)" <you@gwu.edu> admin >> user_map.tsv
+chmod 644 user_map.tsv                     # group inherited from setgid admin/; only you write
+cat user_map.tsv
+```
+
+Fields are separated by tabs, as the `printf` formats produce; see [Usernames and handles](10-user-names.md). The map is the only authority for admin rights, so keep it writable only by admins.
+
 ## 3. Publish the user-facing scripts
 
 ```bash
@@ -52,11 +66,11 @@ This symlinks the scripts members run into `local/bin/` and the files they sourc
 
 ## 4. Create the user map and add members
 
-The map from Linux usernames to handles lives only on the cluster, in `admin/user_map.tsv` ([Usernames and handles](10-user-names.md)). Add yourself and each member:
+The map from Linux usernames to handles lives only on the cluster, in `admin/user_map.tsv` ([Usernames and handles](10-user-names.md)). You are already in it from step 2a. Add each member (use `admin` as the last argument only for further admins):
 
 ```bash
 cd /GWSPH/groups/bendallgrp/software/tools/GWHPC-bendallgrp.git
-scripts/user-map-add.sh <linux_user> <handle> "<Full Name>"
+scripts/user-map-add.sh <linux_user> <handle> "<Full Name>" [<email> [user|admin]]
 cat /GWSPH/groups/bendallgrp/admin/user_map.tsv     # or `user-map-list` once step 5 is done
 ```
 
@@ -110,7 +124,7 @@ These are marked **VERIFY** in the docs. Replace each marker with the real answe
 ### Add a new member
 
 1. RTS adds them to the Unix group `MG-bendallgrp` (request through the IT Help portal or rtshelp@gwu.edu).
-2. Add them to the map, from the checkout: `scripts/user-map-add.sh <linux_user> <handle> "<Full Name>"`.
+2. Add them to the map, from the checkout: `scripts/user-map-add.sh <linux_user> <handle> "<Full Name>" <email> [user|admin]`.
 3. Tell them to follow [First-time user setup](setup-user.md). They run `init-user.sh` themselves so their directories are owned by them.
 
 ### Publish or update a modulefile

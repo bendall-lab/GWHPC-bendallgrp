@@ -5,7 +5,7 @@ SCRATCH_ROOT="${SCRATCH_ROOT:-/scratch/bendallgrp}"       # Lenovo DSS
 UNIX_GROUP="${UNIX_GROUP:-MG-bendallgrp}"                 # Unix group; differs from the directory name
 LOCAL_ROOT="${LOCAL_ROOT:-$GROUP_ROOT/local}"             # group-authored scripts/config (like /usr/local)
 DRY_RUN="${DRY_RUN:-0}"
-USER_MAP="${USER_MAP:-$GROUP_ROOT/admin/user_map.tsv}"    # linux_user<TAB>handle<TAB>full_name<TAB>added
+USER_MAP="${USER_MAP:-$GROUP_ROOT/admin/user_map.tsv}"    # linux_user<TAB>handle<TAB>full_name<TAB>added<TAB>email<TAB>role
 
 info() { printf '[info] %s\n' "$*"; }
 warn() { printf '[warn] %s\n' "$*" >&2; }
@@ -18,6 +18,15 @@ run() {
     else
         "$@"
     fi
+}
+
+# require_admin: exit unless the current user (whoami) has role "admin" in $USER_MAP.
+# For admin-only scripts. Bootstrap the first admin by hand (docs/setup-admin.md, step 2a).
+require_admin() {
+    local me; me="$(whoami)"
+    [[ -r "$USER_MAP" ]] || die "cannot read the user map $USER_MAP; the first admin must be added by hand (docs/setup-admin.md, step 2a)"
+    awk -F'\t' -v u="$me" '!/^#/ && $1==u && $6=="admin" {f=1} END {exit !f}' "$USER_MAP" ||
+        die "this script is admin-only, and $me is not listed with role 'admin' in $USER_MAP"
 }
 
 # Group ownership is never set with chgrp: the group and scratch roots were created by an

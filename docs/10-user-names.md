@@ -7,17 +7,20 @@ Pegasus usernames are assigned and carry no meaning. The group maps each Linux u
 `/GWSPH/groups/bendallgrp/admin/user_map.tsv`: tab-separated, one member per line.
 
 ```text
-# linux_user	handle	full_name	added
-u0000001	jane-doe	Jane Doe	2026-01-01
+# linux_user	handle	full_name	added	email	role
+u0000001	jane-doe	Jane Doe	2026-01-01	jane.doe@example.edu	user
 ```
 
 - **Stored on the cluster only.** It is not in this repository, so names don't end up in a public GitHub Pages site. `templates/user_map.example.tsv` shows the format.
 - `admin/` is group-only (2770), so only members can read it.
-- Handles are lowercase letters, digits, `_` and `-`, and unique. Linux usernames are unique too.
+- Handles are lowercase letters, digits, `_` and `-`, and unique. Linux usernames are unique too. `role` is `user` or `admin` (default `user`); `email` may be empty. Like names, emails stay on the cluster only.
+
+Admin-only scripts (`link-local.sh`, `user-map-add.sh`, `install-modulefiles.sh`) check that `whoami` has `role` = `admin` here. The first admin is added by hand ([setup-admin step 2a](setup-admin.md#2a-bootstrap-the-user-map-with-yourself-as-admin)).
 
 ```bash
 # admin only, from the checkout (not linked into local/bin):
-scripts/user-map-add.sh u0000001 jane-doe "Jane Doe"
+scripts/user-map-add.sh u0000001 jane-doe "Jane Doe" jane.doe@example.edu   # role defaults to user
+scripts/user-map-add.sh u0000002 bob-roe "Bob Roe" bob.roe@example.edu admin
 
 # anyone (shell functions from the group shell setup):
 user-map-lookup jane-doe                 # -> u0000001
