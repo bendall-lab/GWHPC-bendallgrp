@@ -6,7 +6,7 @@
 #
 # Usage: user-map-add.sh [-n|--dry-run] LINUX_USER HANDLE ["Full Name"] [EMAIL] [ROLE]
 # ROLE is "user" (default) or "admin".
-# The map must already exist with you as an admin (bootstrap: docs/setup-admin.md, step 2a).
+# The map must already exist with you as an admin (bootstrap: docs/setup-admin.md, Prerequisites).
 # Env overrides: USER_MAP, GROUP_ROOT
 set -euo pipefail
 # Resolve symlinks so the script works when run via a link (see docs/02-directory-layout.md)

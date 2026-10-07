@@ -16,6 +16,22 @@ id                                    # MG-bendallgrp should be in your groups
 
 Members cannot `chgrp`, so the scripts rely on the setgid bit and never change group ownership ([Permissions](03-permissions.md)).
 
+### Bootstrap the user map with yourself as admin
+
+`init-group-dir.sh`, `link-local.sh`, `user-map-add.sh` and `install-modulefiles.sh` are admin-only: each checks that your Linux username (`whoami`) is listed with role `admin` in `admin/user_map.tsv`, and exits otherwise. Nothing exists yet, so create `admin/` and write the first line by hand (once). `init-group-dir.sh` later adopts the directory (it is idempotent); after that, use `user-map-add.sh` for everyone else, including further admins.
+
+```bash
+mkdir -p /GWSPH/groups/bendallgrp/admin
+chmod 2770 /GWSPH/groups/bendallgrp/admin  # group-only; inherits the group from the setgid root
+cd /GWSPH/groups/bendallgrp/admin
+printf '# linux_user\thandle\tfull_name\tadded\temail\trole\n' > user_map.tsv
+printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(whoami)" <your-handle> "<Your Name>" "$(date +%F)" <you@gwu.edu> admin >> user_map.tsv
+chmod 644 user_map.tsv                     # only you write
+cat user_map.tsv
+```
+
+Fields are separated by tabs, as the `printf` formats produce; see [Usernames and handles](10-user-names.md). The map is the only authority for admin rights, so keep it writable only by admins.
+
 ## 1. Create the directory layout
 
 Clone the repo temporarily to get the setup scripts, then create the layout:
@@ -39,20 +55,6 @@ rm -rf ~/GWHPC-bendallgrp                  # the temporary clone
 
 You own this checkout and are the only one who runs `git pull` in it. Members never write there.
 
-## 2a. Bootstrap the user map with yourself as admin
-
-`link-local.sh`, `user-map-add.sh` and `install-modulefiles.sh` are admin-only: each checks that your Linux username (`whoami`) is listed with role `admin` in `admin/user_map.tsv`, and exits otherwise. `init-group-dir.sh` is not checked, because it is what creates `admin/`. The map does not exist yet, so write the first line by hand (once); after that, use `user-map-add.sh` for everyone else, including further admins.
-
-```bash
-cd /GWSPH/groups/bendallgrp/admin
-printf '# linux_user\thandle\tfull_name\tadded\temail\trole\n' > user_map.tsv
-printf '%s\t%s\t%s\t%s\t%s\t%s\n' "$(whoami)" <your-handle> "<Your Name>" "$(date +%F)" <you@gwu.edu> admin >> user_map.tsv
-chmod 644 user_map.tsv                     # group inherited from setgid admin/; only you write
-cat user_map.tsv
-```
-
-Fields are separated by tabs, as the `printf` formats produce; see [Usernames and handles](10-user-names.md). The map is the only authority for admin rights, so keep it writable only by admins.
-
 ## 3. Publish the user-facing scripts
 
 ```bash
@@ -66,7 +68,7 @@ This symlinks the scripts members run into `local/bin/` and the files they sourc
 
 ## 4. Create the user map and add members
 
-The map from Linux usernames to handles lives only on the cluster, in `admin/user_map.tsv` ([Usernames and handles](10-user-names.md)). You are already in it from step 2a. Add each member (use `admin` as the last argument only for further admins):
+The map from Linux usernames to handles lives only on the cluster, in `admin/user_map.tsv` ([Usernames and handles](10-user-names.md)). You are already in it from the prerequisites. Add each member (use `admin` as the last argument only for further admins):
 
 ```bash
 cd /GWSPH/groups/bendallgrp/software/tools/GWHPC-bendallgrp.git
