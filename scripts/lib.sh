@@ -5,7 +5,7 @@ SCRATCH_ROOT="${SCRATCH_ROOT:-/scratch/bendallgrp}"       # Lenovo DSS
 UNIX_GROUP="${UNIX_GROUP:-MG-bendallgrp}"                 # Unix group; differs from the directory name
 LOCAL_ROOT="${LOCAL_ROOT:-$GROUP_ROOT/local}"             # group-authored scripts/config (like /usr/local)
 DRY_RUN="${DRY_RUN:-0}"
-USER_MAP="${USER_MAP:-$GROUP_ROOT/admin/user_map.tsv}"    # linux_user<TAB>handle<TAB>full_name<TAB>added
+USER_MAP="${USER_MAP:-$GROUP_ROOT/admin/user_map.tsv}"    # linux_user<TAB>handle<TAB>full_name<TAB>added<TAB>email<TAB>role
 
 info() { printf '[info] %s\n' "$*"; }
 warn() { printf '[warn] %s\n' "$*" >&2; }
