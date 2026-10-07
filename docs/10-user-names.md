@@ -56,11 +56,13 @@ source /GWSPH/groups/bendallgrp/local/etc/hpc-aliases.sh
 
 ### Optional: make plain `ls` show handles
 
-Set `HPC_WRAP_LS=1` in your `~/.bashrc` **before** the group shell setup block:
+In the group shell setup block in your `~/.bashrc`, uncomment the line (remove the leading `# `):
 
 ```bash
 export HPC_WRAP_LS=1
 ```
+
+Re-running `install-shell-setup.sh` keeps it enabled.
 
 On a terminal, long listings (`ls -l`, `-la`, `-al`, `-g`, `-o`, `--format=long`) then show handles; every other `ls`, and every `ls` in a pipe or script, is the normal `ls` and keeps its columns and colors. The wrapper keeps `ls`'s exit status and replaces any `alias ls=...` you had. Run `command ls` to bypass it. Leave `HPC_WRAP_LS` unset and `lsh` remains the explicit alternative.
 
