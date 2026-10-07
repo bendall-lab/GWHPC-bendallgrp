@@ -12,15 +12,21 @@ The admin has already published the scripts into `local/` ([Starting a new proje
 source ~/.bashrc
 ```
 
-It appends this block to `~/.bashrc`, once; re-running does nothing. The path is stable (a symlink into the repo), so repo updates never require reinstalling:
+It appends this block to `~/.bashrc`. The path is stable (a symlink into the repo), so repo updates never require reinstalling:
 
 ```bash
 # >>> bendallgrp shell setup >>>
+# export HPC_WRAP_LS=1            # wrap 'ls -l' to show handles
+# export BENDALLGRP_LOAD_CONDA=1  # load miniforge3 module and activate base
 [ -r ".../local/etc/group-bashrc.sh" ] && . ".../local/etc/group-bashrc.sh"
 # <<< bendallgrp shell setup <<<
 ```
 
-To remove it, delete those three lines. If your login shell reads `~/.bash_profile` and not `~/.bashrc`, make sure `.bash_profile` sources `.bashrc` (**VERIFY** on Pegasus login nodes).
+Both options are off by default. To enable one, remove the leading `# ` from its line in the block (see below for what each does), then `source ~/.bashrc`.
+
+Re-running the script replaces the block with the current version and keeps any option you have enabled. It saves the previous file as `~/.bashrc.bak` first (overwritten on each re-run) and stops without changing anything if the block's end line is missing.
+
+To uninstall, delete the block, from the `# >>>` line to the `# <<<` line. If your login shell reads `~/.bash_profile` and not `~/.bashrc`, make sure `.bash_profile` sources `.bashrc` (**VERIFY** on Pegasus login nodes).
 
 ## What it sets
 
@@ -46,12 +52,12 @@ Interactive shells also get:
 | `qcheck [-j IDS]` | your recent job history (`sacct` with state, partition, start, end, nodes) |
 | `qstate JOBID` | one job's state, lowercase, for scripts |
 
-`HPC_WRAP_LS=1` (set before the group block in `~/.bashrc`) additionally makes plain `ls` show handles in long listings; see [Usernames and handles](10-user-names.md).
+`HPC_WRAP_LS=1` (uncomment its line in the block) additionally makes plain `ls` show handles in long listings; see [Usernames and handles](10-user-names.md).
 
 Interactive shells also:
 
 - add the group modulefiles to `MODULEPATH` (`module use .../software/modulefiles`), so `module avail` lists the group's modules;
-- with `BENDALLGRP_LOAD_CONDA=1` (set in `~/.bashrc` before the group block), run `module load miniforge3`, which gives `conda`, `mamba` and an active base environment. Off by default so it cannot clash with a member's own conda setup;
+- with `BENDALLGRP_LOAD_CONDA=1` (uncomment its line in the block), run `module load miniforge3`, which gives `conda`, `mamba` and an active base environment. Off by default so it cannot clash with a member's own conda setup;
 - load the `slurm`, `git` and `curl` modules, but only if `sbatch`, `git` or `curl` isn't already on `PATH`;
 - set `LMOD_COLORIZE=YES`;
 - set `TMPDIR=/local` when `/local` is writable and `TMPDIR` is unset or `/tmp`. A `TMPDIR` that Slurm sets for a job is never overridden. Jobs share `/local`, so create a private directory with `mktemp -d -p "$TMPDIR"` and remove it when the job ends.
