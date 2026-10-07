@@ -26,7 +26,9 @@ Both options are off by default. To enable one, remove the leading `# ` from its
 
 Re-running the script replaces the block with the current version and keeps any option you have enabled. It saves the previous file as `~/.bashrc.bak` first (overwritten on each re-run) and stops without changing anything if the block's end line is missing.
 
-To uninstall, delete the block, from the `# >>>` line to the `# <<<` line. If your login shell reads `~/.bash_profile` and not `~/.bashrc`, make sure `.bash_profile` sources `.bashrc` (**VERIFY** on Pegasus login nodes).
+Login shells read `~/.bash_profile`, not `~/.bashrc`, so the script also checks that your login file sources `.bashrc`. It creates `~/.bash_profile` (containing `if [ -f ~/.bashrc ]; then . ~/.bashrc; fi`) when you have no `.bash_profile`, `.bash_login` or `.profile`. If one exists but doesn't mention `.bashrc`, the script warns and prints the lines to add; it never edits an existing login file.
+
+To uninstall, delete the block, from the `# >>>` line to the `# <<<` line.
 
 ## What it sets
 
