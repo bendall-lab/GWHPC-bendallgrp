@@ -21,10 +21,10 @@ run() {
 }
 
 # require_admin: exit unless the current user (whoami) has role "admin" in $USER_MAP.
-# For admin-only scripts. Bootstrap the first admin by hand (docs/setup-admin.md, step 2a).
+# For admin-only scripts. Bootstrap the first admin by hand (docs/setup-admin.md, Prerequisites).
 require_admin() {
     local me; me="$(whoami)"
-    [[ -r "$USER_MAP" ]] || die "cannot read the user map $USER_MAP; the first admin must be added by hand (docs/setup-admin.md, step 2a)"
+    [[ -r "$USER_MAP" ]] || die "cannot read the user map $USER_MAP; the first admin must be added by hand (docs/setup-admin.md, Prerequisites)"
     awk -F'\t' -v u="$me" '!/^#/ && $1==u && $6=="admin" {f=1} END {exit !f}' "$USER_MAP" ||
         die "this script is admin-only, and $me is not listed with role 'admin' in $USER_MAP"
 }

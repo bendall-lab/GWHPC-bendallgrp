@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # Create the group directory layout on NFS (Qumulo) and shared scratch layout on DSS.
+# ADMIN ONLY: requires your user to have role "admin" in the user map, which must be
+# bootstrapped by hand first (docs/setup-admin.md, Prerequisites).
 # Idempotent: safe to re-run. See docs/02-directory-layout.md for the rationale.
 #
 # Usage: init-group-dir.sh [-n|--dry-run]
@@ -9,6 +11,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -P "$(dirname "$(readlink -f "${BASH_SOURCE[0]}" 2>/dev/null || echo "${BASH_SOURCE[0]}")")" && pwd)"
 source "$SCRIPT_DIR/lib.sh"
 parse_common_flags "$@"
+require_admin
 
 info "Group dir : $GROUP_ROOT"
 info "Scratch   : $SCRATCH_ROOT"
