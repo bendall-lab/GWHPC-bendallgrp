@@ -51,6 +51,9 @@ if [ -d /local ] && [ -w /local ] && { [ -z "${TMPDIR:-}" ] || [ "$TMPDIR" = /tm
 fi
 
 # Job-queue shortcuts: qstat (my jobs), qcheck (history for given job ids), qstate JOBID (state only)
+# The unalias must be its own command, run before the definitions below are parsed: bash refuses
+# to define a function whose name is an active alias (e.g. one from a site or personal rc file).
+unalias qstat qcheck qstate 2>/dev/null
 qstat()  { squeue -u "$USER" -o "%.10i  %.32j  %.8T  %.8M  %.6D  %.9P  %.19S   %R" "$@"; }
 qcheck() { sacct -u "$USER" -o jobid,jobname,state,partition,start,end,nodelist "$@"; }
 qstate() { sacct -u "$USER" -nXPo state -j "$@" | awk '{print tolower($0)}'; }
