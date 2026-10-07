@@ -23,6 +23,7 @@ for a in "$@"; do
     esac
 done
 parse_common_flags "${args[@]+"${args[@]}"}"
+require_admin
 
 src="$(cd "$SCRIPT_DIR/.." && pwd)/modulefiles"
 dest="${MODULEFILES_DEST:-$GROUP_ROOT/software/modulefiles}"

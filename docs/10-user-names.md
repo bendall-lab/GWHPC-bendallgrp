@@ -15,6 +15,8 @@ u0000001	jane-doe	Jane Doe	2026-01-01	jane.doe@example.edu	user
 - `admin/` is group-only (2770), so only members can read it.
 - Handles are lowercase letters, digits, `_` and `-`, and unique. Linux usernames are unique too. `role` is `user` or `admin` (default `user`); `email` may be empty. Like names, emails stay on the cluster only.
 
+Admin-only scripts (`link-local.sh`, `user-map-add.sh`, `install-modulefiles.sh`) check that `whoami` has `role` = `admin` here. The first admin is added by hand ([setup-admin step 2a](setup-admin.md#2a-bootstrap-the-user-map-with-yourself-as-admin)).
+
 ```bash
 # admin only, from the checkout (not linked into local/bin):
 scripts/user-map-add.sh u0000001 jane-doe "Jane Doe" jane.doe@example.edu   # role defaults to user
