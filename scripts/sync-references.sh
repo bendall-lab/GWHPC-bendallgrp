@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Sync reference data from the NFS master (refDB) to the DSS scratch mirror.
-# Use it to pre-stage everything, or from cron to repair a purged mirror.
+# Use it to pre-stage everything or to repair a purged mirror (cron does not work on Pegasus; see docs/09-references.md).
 # Workflows normally stage on demand via templates/project/rules/stage_reference.smk.
 #
 # Usage: sync-references.sh [-n|--dry-run] [REF ...]

@@ -47,7 +47,7 @@ scripts/sync-references.sh GRCh38                # one reference
 scripts/sync-references.sh                       # everything
 ```
 
-A cron job running the last command at least every few weeks (and before the first of the month) keeps the mirror warm. `crontab` is installed on the login nodes (`/usr/bin/crontab`); **VERIFY** that an entry actually fires. There are several login nodes, so install it on one and note which.
+Running the last command at least every few weeks, and before the first of the month, keeps the mirror warm. Cron does not work on Pegasus: `/usr/bin/crontab` exists on the login nodes, but entries do not run. Run it by hand, or put it in a Snakemake project's first rule, which stages what it needs anyway. Slurm's `scrontab` (recurring jobs run by the scheduler) is a possible replacement; **VERIFY** that it is enabled on Pegasus (`scrontab -l`).
 
 ## Permissions
 
