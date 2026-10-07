@@ -114,7 +114,6 @@ These are marked **VERIFY** in the docs. Replace each marker with the real answe
 | Question | Where it is recorded |
 |---|---|
 | Snapshot and backup policy for the group directory (believed to be none) | [Storage tiers](01-storage-tiers.md) |
-| Whether ACLs can be set from Pegasus | [Permissions](03-permissions.md) |
 | Whether a crontab entry actually fires on a login node (`crontab` is installed) | [Reference data](09-references.md) |
 | Which Slurm account new members get. Accounting enforces associations; two members (including the admin) are in `cbi` and the rest in `bendallgrp`, so new members are presumed `bendallgrp`. Check with `sacctmgr show assoc user=<user> format=user,account` after RTS adds them | [SLURM and partitions](05-slurm-and-partitions.md) |
 
