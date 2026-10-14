@@ -40,6 +40,8 @@ nav:
   - Installed apps:
     - Overview and conventions: apps/index.md
     - Miniforge3: apps/miniforge3.md
+    - Snakemake: apps/snakemake.md
+    - Pixi: apps/pixi.md
   - 1. Storage tiers: 01-storage-tiers.md
   - 2. Directory layout: 02-directory-layout.md
   - 3. Permissions: 03-permissions.md
