@@ -32,10 +32,12 @@ Included in the shared environment:
 | Kind | Plugins |
 |---|---|
 | Executor | `slurm` (it brings `slurm-jobstep`) |
-| Storage | `http`, `cached-http`, `s3`, `gcs`, `zenodo`, `fs`, `sftp` |
+| Storage | `http`, `cached-http`, `s3`, `zenodo`, `fs` |
 | Tool | `rclone` binary |
 
-Why the extras: `cached-http` keeps a shared download cache, so a file fetched by one member is not fetched again; `fs` and `sftp` give remote-file semantics for a shared filesystem or an SFTP host. **There is no `rclone` storage plugin on conda-forge or bioconda** (nor on PyPI as of 2026-10), so `rclone` is only the command-line tool for use in rules or by hand. Not included: `azure`, `ftp`, `irods`, `rucio`, `xrootd`, `sharepoint` (request them if needed) and the logger plugins `panoptes`, `snkmt` and `prometheus`, which need a server to report to.
+Why the extras: `cached-http` keeps a shared download cache, so a file fetched by one member is not fetched again; `fs` gives remote-file semantics for a shared filesystem. **There is no `rclone` storage plugin on conda-forge or bioconda** (nor on PyPI as of 2026-10), so `rclone` is only the command-line tool for use in rules or by hand. Not included: `gcs` (its google-cloud dependencies hold `grpcio` back, which prints a FutureWarning on every run; add it to a project's own `pixi.toml` if needed), `sftp` (its `pysftp` dependency fails to import with current `paramiko`, which breaks Snakemake at startup), `azure`, `ftp`, `irods`, `rucio`, `xrootd`, `sharepoint` (request them if needed) and the logger plugins `panoptes`, `snkmt` and `prometheus`, which need a server to report to.
+
+**One broken plugin breaks Snakemake.** Snakemake imports every installed plugin when it starts, so the set is kept small and each addition must pass `snakemake --version` after the install.
 
 **Report plugins** (`snakemake-report-plugin-fairscape`, `-nanopub`) are not on conda channels and are PyPI-only. A trial solve with both added resolved, but added about a dozen PyPI packages (rdflib, pyshacl, nanopub and others) and moved Python from 3.14 to 3.13. They are 0.1.0 and 0.3.2 releases that only act when you pass a report plugin option. Not harmful, but not worth coupling every user's Snakemake to. Keep them out of the group environment and put them in the workflow's own `pixi.toml` (below) for the projects that use them.
 

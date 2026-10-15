@@ -10,13 +10,15 @@ snakemake-executor-plugin-slurm = "*"
 # Needed by rules with a `conda:` directive (Snakemake calls conda/mamba to build their environments).
 conda = "*"
 mamba = "*"
-# Storage plugins (remote files via storage plugins; fs/sftp/cached-http are also useful on the cluster).
+# Storage plugins (remote files via storage plugins; fs/cached-http are also useful on the cluster).
+# Snakemake imports EVERY installed plugin at startup, so one broken plugin breaks snakemake itself.
+# gcs is excluded: its google-cloud stack holds grpcio at 1.71 (FutureWarning on every run);
+# without it grpcio is not needed at all. Add it in a project's own pixi.toml if needed.
+# sftp is excluded: it needs pysftp, which fails to import with paramiko >= 4 (DSSKey removed).
 snakemake-storage-plugin-http = "*"
 snakemake-storage-plugin-cached-http = "*"
 snakemake-storage-plugin-s3 = "*"
-snakemake-storage-plugin-gcs = "*"
 snakemake-storage-plugin-zenodo = "*"
 snakemake-storage-plugin-fs = "*"
-snakemake-storage-plugin-sftp = "*"
 # There is no rclone storage plugin on conda-forge/bioconda; the rclone binary is for use in rules.
 rclone = "*"
