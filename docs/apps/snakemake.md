@@ -41,7 +41,7 @@ Why the extras: `cached-http` keeps a shared download cache, so a file fetched b
 
 **Can members add plugins to the group module?** Not into the environment: it is read-only, and that is intended. Snakemake finds plugins by importing installed `snakemake_*_plugin_*` Python packages, so a plugin placed on `PYTHONPATH` (for example `pip install --target ~/snk-plugins <plugin>` and `export PYTHONPATH=~/snk-plugins`) should be discovered. **VERIFY**, and expect trouble when the plugin's dependency pins disagree with the environment's. Prefer the next option.
 
-**Recommended for anything beyond the shared set: the workflow's own `pixi.toml`.** A project with a `pixi.toml` and committed `pixi.lock` pins its own Snakemake and plugins (conda or PyPI), rebuilds identically for any member, and does not depend on which group version is installed. Run it with `pixi run snakemake ...` from the project (after `module load pixi`). The group `snakemake` module then remains the easy default for quick work. A project template and `run.sh` support for this are not written yet.
+**Recommended for anything beyond the shared set: the workflow's own `pixi.toml`.** A project with a `pixi.toml` and committed `pixi.lock` pins its own Snakemake and plugins (conda or PyPI), rebuilds identically for any member, and does not depend on which group version is installed. Run it with `pixi run snakemake ...` from the project (after `module load pixi`). The group `snakemake` module then remains the easy default for quick work. `new-project.sh` projects already do this: the template has a `pixi.toml`/`pixi.lock` and `run.sh` uses them ([details](../07-new-project.md#project-software-pixi)).
 
 ## Install <version>
 

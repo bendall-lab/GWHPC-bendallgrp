@@ -26,10 +26,17 @@ First-time setup, and what to run after adding a script, is in [First-time admin
 init-user.sh                         # once per member
 new-project.sh 2026_rnaseq           # per project
 
+module load pixi                     # run.sh uses the project's pixi.toml
 cd /GWSPH/groups/bendallgrp/projects/2026_rnaseq
 git init                             # project code is its own repository
 ./run.sh -n                          # dry run
 ./run.sh                             # run
 ```
+
+## Project software (pixi)
+
+The template contains `pixi.toml` and a `pixi.lock` (Snakemake 9, the SLURM executor plugin, `conda` and `mamba`). `run.sh` runs `pixi run --locked snakemake ...` when `pixi.toml` exists, so the first `./run.sh` builds the environment into `.pixi/` in the project (git-ignored) and every member gets the same versions. To change software: edit `pixi.toml`, run `pixi lock`, commit both files (`--locked` makes `run.sh` fail if they disagree). Delete `pixi.toml` and `pixi.lock` to use whatever `snakemake` is on `PATH` instead, such as the group [`snakemake` module](apps/snakemake.md).
+
+Environments in `.pixi/` live on NFS with the project, not on scratch (which is purged). Each project holds its own copy of the packages unless pixi's cache and the project share a filesystem, in which case files are hardlinked. **VERIFY** disk use and first-build time on Pegasus; a shared cache is not set up yet. Rules with a `conda:` directive still build their environments under the profile's `conda-prefix`.
 
 The template's example rules only count lines in `01_raw/<sample>.txt`; replace them with real steps.

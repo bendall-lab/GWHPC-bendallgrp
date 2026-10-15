@@ -43,7 +43,7 @@ cdsme && pwd -P                           # your directory on scratch
 
 ## 3. Get Snakemake
 
-Workflows here use Snakemake 9 or newer with the SLURM executor plugin:
+Projects made by `new-project.sh` bring their own Snakemake through pixi: run `module load pixi` before `./run.sh` and nothing else is needed ([details](07-new-project.md#project-software-pixi)). For Snakemake outside a project, use `module load snakemake` (once installed, see [Snakemake](apps/snakemake.md)) or make your own environment. Workflows here use Snakemake 9 or newer with the SLURM executor plugin:
 
 ```bash
 mamba create -n snakemake -c conda-forge -c bioconda snakemake snakemake-executor-plugin-slurm

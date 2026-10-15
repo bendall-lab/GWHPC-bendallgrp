@@ -27,7 +27,7 @@ make_dir "$work" 2775
 
 # Fill in placeholders in the copied templates.
 if [[ "$DRY_RUN" != 1 ]]; then
-    find "$proj" -type f \( -name '*.yaml' -o -name '*.md' -o -name '*.sh' -o -name '*.smk' \) -print0 |
+    find "$proj" -type f \( -name '*.yaml' -o -name '*.md' -o -name '*.sh' -o -name '*.smk' -o -name '*.toml' \) -print0 |
         while IFS= read -r -d '' f; do
             sed -i.bak \
                 -e "s|@PROJECT_NAME@|$name|g" \
