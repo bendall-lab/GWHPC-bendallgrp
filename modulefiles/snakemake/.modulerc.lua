@@ -1,1 +1,1 @@
-module_version("snakemake/9.14.0", "default")
+module_version("snakemake/9.27.0", "default")

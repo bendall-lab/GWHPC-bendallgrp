@@ -134,7 +134,7 @@ The script never deletes published modulefiles unless you pass `--delete`.
 
 The group shell setup (`scripts/group-bashrc.sh`) runs `module use $G/software/modulefiles` for interactive shells, so members see the group's modules in `module avail`. Loading is deliberately opt-in, because it injects the `conda` function and an active base environment into the shell and could clash with a member's own conda setup. Members run `module load miniforge3`, or opt in for every interactive shell by setting `BENDALLGRP_LOAD_CONDA=1` in `~/.bashrc` before the group block. See [Group shell setup](../11-shell-setup.md).
 
-Batch jobs and scripts do not run the group bashrc. They inherit `MODULEPATH` and the loaded modules from the shell that submitted them. A project's `run.sh` loading the module itself is planned but not implemented yet; it waits on the Snakemake module ([Snakemake](snakemake.md)).
+Batch jobs and scripts do not run the group bashrc. They inherit `MODULEPATH` and the loaded modules from the shell that submitted them. A project's `run.sh` loading the module itself is planned but not implemented yet; see [Snakemake](snakemake.md) for the Snakemake module.
 
 ### 8. Verify
 
@@ -169,20 +169,9 @@ See that "defaults" is at the top of the channels list, therefore, user settings
 [Conda and software](../04-conda.md), and consider also setting the 
 channels with `CONDA_CHANNELS` in the modulefile.
 
-### 10. Shared Snakemake 9 environment (later step)
+### 10. Shared Snakemake 9 environment
 
-Create the environment with the group install, owned by you and read-only for members. Replace the version placeholder.
-
-```bash
-module load miniforge3
-conda create -p $G/software/conda/envs/snakemake-<snakemake_version> \
-    -c conda-forge -c bioconda --override-channels \
-    snakemake=<snakemake_version> snakemake-executor-plugin-slurm
-chmod -R go-w $G/software/conda/envs/snakemake-<snakemake_version>
-conda env export -p $G/software/conda/envs/snakemake-<snakemake_version> --no-builds
-```
-
-Keep the exported YAML in this repository so the environment can be rebuilt. The full procedure and the `snakemake/<version>` module are on the [Snakemake](snakemake.md) page, which supersedes this step.
+The shared Snakemake is no longer a conda environment under this install. It is a pixi environment with its own `conda` and `mamba`; see [Snakemake](snakemake.md).
 
 ## Upgrading or adding a version
 

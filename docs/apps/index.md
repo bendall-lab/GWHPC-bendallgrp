@@ -5,7 +5,7 @@ One page per application installed under `software/` and published as an Lmod mo
 | App | Module | Install tree | Page |
 |---|---|---|---|
 | Miniforge | `miniforge3/<version>` | `software/miniforge3/<version>` | [Miniforge3](miniforge3.md) |
-| Snakemake | `snakemake/<version>` | `software/conda/envs/snakemake-<version>` | [Snakemake](snakemake.md) |
+| Snakemake | `snakemake/<version>` | `software/snakemake/<version>` (pixi) | [Snakemake](snakemake.md) |
 | Pixi | `pixi/<version>` | `software/pixi/<version>` | [Pixi](pixi.md) |
 
 Add a row whenever you add an app. Start a new page from `templates/app-doc.md` in the repo and name it `docs/apps/<tool>.md`, one page per tool with a section per version.

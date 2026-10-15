@@ -1,12 +1,11 @@
-# Snakemake (shared conda environment)
+# Snakemake (shared pixi environment)
 
-- **What it is:** the Snakemake workflow manager, https://snakemake.readthedocs.io, with `snakemake-executor-plugin-slurm`, as in [Snakemake 9+ workflows](../06-snakemake.md)
+- **What it is:** the Snakemake workflow manager, https://snakemake.readthedocs.io, with `snakemake-executor-plugin-slurm`, `conda` and `mamba`, as in [Snakemake 9+ workflows](../06-snakemake.md). Snakemake's documentation recommends installing it with [pixi](pixi.md), so the install is a locked pixi project.
 - **Module:** `snakemake/<version>`
-- **Install tree:** `/GWSPH/groups/bendallgrp/software/conda/envs/snakemake-<version>` (a conda environment, created by the admin and read-only for members)
-- **Modulefile:** `modulefiles/snakemake/<version>.lua` in this repository, published to `/GWSPH/groups/bendallgrp/software/modulefiles/snakemake/<version>.lua`
+- **Install tree:** `/GWSPH/groups/bendallgrp/software/snakemake/<version>/` (`pixi.toml`, `pixi.lock`, and the environment in `.pixi/envs/default`); read-only for members
+- **Recipe in this repository:** `envs/snakemake/<version>/pixi.toml` and `pixi.lock`
+- **Modulefile:** `modulefiles/snakemake/<version>.lua`, published to `/GWSPH/groups/bendallgrp/software/modulefiles/snakemake/<version>.lua`
 - **Maintainer:** group admin
-
-The versions in the committed modulefile (`9.14.0`) and in the commands below are placeholders: **VERIFY** the current Snakemake 9 release on conda-forge (`mamba search -c conda-forge -c bioconda snakemake`) and keep the modulefile name, its `version`, `.modulerc.lua` and the environment name identical.
 
 ## Using it
 
@@ -15,46 +14,64 @@ module load snakemake
 snakemake --version
 ```
 
-The module only puts the environment's `bin/` on `PATH`; it does not activate conda. Projects made by `new-project.sh` call `snakemake` from `run.sh`, so loading the module before `./run.sh` is enough (the job-submitting shell's environment is inherited, as described in [Miniforge3](miniforge3.md) step 7). Workflows still follow the run pattern in [06](../06-snakemake.md): `--directory` on scratch, a profile for the SLURM executor.
+The module puts the environment's `bin/` on `PATH`; it does not activate anything and members never run `pixi`. Projects from `new-project.sh` call `snakemake` in `run.sh`, so load the module before `./run.sh`; the job-submitting shell's environment is inherited ([Miniforge3](miniforge3.md) step 7). Workflows follow the run pattern in [06](../06-snakemake.md).
+
+**The `conda:` directive.** The environment contains `conda` and `mamba`, which is what Snakemake calls to build per-rule environments (`--software-deployment-method conda`, with `conda-prefix` set by the project profile). No `miniforge3` module is needed. Also loading `miniforge3` is allowed; whichever was loaded last supplies `conda`. The environment's root `.condarc` (see install) gives the same channels as Miniforge, with `nodefaults`. **VERIFY** this on the cluster with the test workflow below before announcing the module.
 
 Caveats:
 
-- Rules that use `conda:` (per-rule environments) need a `conda`/`mamba` on `PATH`: also `module load miniforge3` (its `bin/` goes ahead of the snakemake environment on `PATH`, so check `which snakemake` still points at the group environment). **VERIFY** whether `snakemake` from conda-forge ships its own `conda`; if it does, this note can go.
 - Only one `snakemake/*` version can be loaded at a time (`family("snakemake")`).
-- Members cannot install into the environment. For extra Python packages in a workflow, use per-rule environments or ask the admin for a new version.
+- The base environment is read-only. Rule environments are created by Snakemake under `conda-prefix`, not inside it; packages are cached per user in `~/.conda/pkgs`.
+- To add Python packages for a workflow, use per-rule environments, or ask the admin for a new version.
+- The versions are pinned. 9.27.0 was current when this was written; workflows developed on 9.17.3 should run unchanged, but check the Snakemake changelog if a rule behaves differently. Older versions can be installed side by side (see Upgrading).
 
 ## Install <version>
 
-Run on a Pegasus login node as the admin. Nothing here is run by members. Needs the [Miniforge3](miniforge3.md) module (this is its step 10).
+Run on a Pegasus login node as the admin. Nothing here is run by members. Needs the [pixi](pixi.md) module.
 
 ```bash
 umask 0022
 G=/GWSPH/groups/bendallgrp
-SMK="9.14.0"                      # VERIFY: current Snakemake 9 release
+SMK="9.27.0"
 module use $G/software/modulefiles
-module load miniforge3
+module load pixi
 
-mamba create -p $G/software/conda/envs/snakemake-$SMK \
-    -c conda-forge -c bioconda --override-channels \
-    snakemake=$SMK snakemake-executor-plugin-slurm
+cd $G/software/tools/GWHPC-bendallgrp.git && git pull
+mkdir -p $G/software/snakemake/$SMK
+cp envs/snakemake/$SMK/pixi.toml envs/snakemake/$SMK/pixi.lock $G/software/snakemake/$SMK/
+cd $G/software/snakemake/$SMK
+pixi install --locked
 ```
 
-`--override-channels` keeps the Anaconda `defaults` channel out regardless of anyone's `.condarc`. Make it read-only for members, then check it works without conda activation (this is how the module uses it):
+`--locked` installs exactly the committed `pixi.lock` and fails if it does not match `pixi.toml`. The environment has to be created at its final location because paths are baked into it; do not move it afterwards. Pixi caches downloads in `~/.cache/rattler` (set `PIXI_CACHE_DIR` if your home is small).
+
+Write the root `.condarc` for the environment's `conda` (same intent as [Miniforge3](miniforge3.md) step 4):
 
 ```bash
-chmod -R go-w $G/software/conda/envs/snakemake-$SMK
-$G/software/conda/envs/snakemake-$SMK/bin/snakemake --version
-$G/software/conda/envs/snakemake-$SMK/bin/snakemake --help | grep -i executor
+ENVDIR=$G/software/snakemake/$SMK/.pixi/envs/default
+cat > $ENVDIR/.condarc <<'EOC'
+# System configuration for conda inside the Bendall group's Snakemake environment.
+channels:
+  - conda-forge
+  - bioconda
+  - nodefaults
+channel_priority: strict
+auto_update_conda: False
+notify_outdated_conda: False
+pkgs_dirs:
+  - ~/.conda/pkgs
+EOC
+chmod -R go-w $G/software/snakemake/$SMK
 ```
 
-Record the exact package set. The YAML is committed so the environment can be rebuilt:
+Check it works without any activation, which is how the module uses it:
 
 ```bash
-conda env export -p $G/software/conda/envs/snakemake-$SMK --no-builds \
-    > ~/snakemake-$SMK.yaml
+$ENVDIR/bin/snakemake --version
+$ENVDIR/bin/snakemake --help | grep -i executor
+$ENVDIR/bin/conda --version && $ENVDIR/bin/mamba --version
+$ENVDIR/bin/conda config --show channels channel_priority pkgs_dirs
 ```
-
-Copy that file into the repository on your workstation as `envs/snakemake-<version>.yaml`, commit it, and delete the copy in your home directory; do not leave uncommitted files in the cluster checkout.
 
 ## Modulefile
 
@@ -72,20 +89,38 @@ scripts/install-modulefiles.sh
 module use $G/software/modulefiles
 module avail snakemake
 module load snakemake
-which snakemake && snakemake --version
+which snakemake conda && snakemake --version
 module help snakemake
-module unload snakemake
-which snakemake                  # should no longer be the group environment
 ```
 
-Then run a project dry run: `./run.sh -n` in a project created by `new-project.sh`.
+Then the check that matters, as a **member** (not the admin), because it is the part not tested when this page was written. A workflow with a `conda:` rule:
+
+```bash
+T=$(mktemp -d) && cd $T && mkdir envs
+cat > envs/hello.yaml <<'EOY'
+channels: [conda-forge, nodefaults]
+dependencies: [python=3.12]
+EOY
+cat > Snakefile <<'EOS'
+rule all:
+    input: "out.txt"
+rule hello:
+    output: "out.txt"
+    conda: "envs/hello.yaml"
+    shell: "python --version > {output}"
+EOS
+snakemake --cores 1 --software-deployment-method conda --conda-prefix $T/conda
+cat out.txt; cd; rm -rf $T
+```
+
+It should create the environment, run the rule and print `Python 3.12.x`. Then run a project dry run (`./run.sh -n`) and a small real run through the SLURM profile, where `conda-prefix` points at `software/conda/snakemake_envs`. If conda fails in the first test, check `which conda`, `conda info`, and whether `~/.conda` is writable.
 
 ## Upgrading
 
-Never modify an installed environment. Create `snakemake-<new>` as above, copy `modulefiles/snakemake/<old>.lua` to `<new>.lua`, change `version`, move the default in `.modulerc.lua`, commit, pull on the cluster and publish. Keep older versions until nothing depends on them.
+Never modify an installed environment. For a new version: copy `envs/snakemake/<old>` to `<new>`, change the pin in `pixi.toml`, run `pixi lock` in that directory (any machine with pixi; `platforms` is `linux-64`) and commit both files. Copy `modulefiles/snakemake/<old>.lua` to `<new>.lua`, change `version`, move the default in `.modulerc.lua`, commit, then repeat the install on the cluster. Keep older versions until nothing depends on them; a project that needs 9.17.3 can have that as its own entry.
 
 ## Changelog
 
 | Date | Version | Change |
 |---|---|---|
-| YYYY-MM-DD | <version> | initial install |
+| YYYY-MM-DD | 9.27.0 | initial install (pixi) |

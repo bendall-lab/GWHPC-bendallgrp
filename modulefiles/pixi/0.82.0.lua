@@ -1,7 +1,7 @@
 -- -*- lua -*-
--- Pixi 0.55.0 for the Bendall group.
+-- Pixi 0.82.0 for the Bendall group.
 -- Install and maintenance: docs/apps/pixi.md in the GWHPC-bendallgrp repository.
-local version = "0.55.0"
+local version = "0.82.0"
 local base    = pathJoin("/GWSPH/groups/bendallgrp/software/pixi", version)
 
 whatis("Name: Pixi")

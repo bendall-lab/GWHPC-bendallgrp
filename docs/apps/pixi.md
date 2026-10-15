@@ -6,7 +6,7 @@
 - **Modulefile:** `modulefiles/pixi/<version>.lua` in this repository, published to `/GWSPH/groups/bendallgrp/software/modulefiles/pixi/<version>.lua`
 - **Maintainer:** group admin
 
-The version in the committed modulefile (`0.55.0`) and in the commands below is a placeholder: **VERIFY** the current release at https://github.com/prefix-dev/pixi/releases and keep the install directory, modulefile name, its `version` and `.modulerc.lua` identical.
+Keep the install directory, modulefile name, its `version` and `.modulerc.lua` identical to the release you install (currently 0.82.0, https://github.com/prefix-dev/pixi/releases). Pixi is also what builds the [Snakemake](snakemake.md) environment.
 
 ## Using it
 
@@ -33,7 +33,7 @@ Run on a Pegasus login node as the admin. Nothing here is run by members.
 ```bash
 umask 0022
 G=/GWSPH/groups/bendallgrp
-PIXI="0.55.0"                     # VERIFY: current release
+PIXI="0.82.0"
 mkdir -p $G/software/pixi/archive $G/software/modulefiles/pixi
 chmod 2755 $G/software/pixi $G/software/modulefiles/pixi
 

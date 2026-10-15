@@ -1,0 +1,12 @@
+# Snakemake 9.27.0 for the Bendall group. Install: docs/apps/snakemake.md
+[workspace]
+name = "snakemake"
+channels = ["conda-forge", "bioconda"]
+platforms = ["linux-64"]
+
+[dependencies]
+snakemake = "==9.27.0"
+snakemake-executor-plugin-slurm = "*"
+# Needed by rules with a `conda:` directive (Snakemake calls conda/mamba to build their environments).
+conda = "*"
+mamba = "*"
