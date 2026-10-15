@@ -1,6 +1,6 @@
 # Snakemake (shared pixi environment)
 
-- **What it is:** the Snakemake workflow manager, https://snakemake.readthedocs.io, with `snakemake-executor-plugin-slurm`, `conda` and `mamba`, as in [Snakemake 9+ workflows](../06-snakemake.md). Snakemake's documentation recommends installing it with [pixi](pixi.md), so the install is a locked pixi project.
+- **What it is:** the Snakemake workflow manager, https://snakemake.readthedocs.io, with `snakemake-executor-plugin-slurm`, storage plugins (see [Plugins](#plugins)), `conda` and `mamba`, as in [Snakemake 9+ workflows](../06-snakemake.md). Snakemake's documentation recommends installing it with [pixi](pixi.md), so the install is a locked pixi project.
 - **Module:** `snakemake/<version>`
 - **Install tree:** `/GWSPH/groups/bendallgrp/software/snakemake/<version>/` (`pixi.toml`, `pixi.lock`, and the environment in `.pixi/envs/default`); read-only for members
 - **Recipe in this repository:** `envs/snakemake/<version>/pixi.toml` and `pixi.lock`
@@ -24,6 +24,24 @@ Caveats:
 - The base environment is read-only. Rule environments are created by Snakemake under `conda-prefix`, not inside it; packages are cached per user in `~/.conda/pkgs`.
 - To add Python packages for a workflow, use per-rule environments, or ask the admin for a new version.
 - The versions are pinned. 9.27.0 was current when this was written; workflows developed on 9.17.3 should run unchanged, but check the Snakemake changelog if a rule behaves differently. Older versions can be installed side by side (see Upgrading).
+
+## Plugins
+
+Included in the shared environment:
+
+| Kind | Plugins |
+|---|---|
+| Executor | `slurm` (it brings `slurm-jobstep`) |
+| Storage | `http`, `cached-http`, `s3`, `gcs`, `zenodo`, `fs`, `sftp` |
+| Tool | `rclone` binary |
+
+Why the extras: `cached-http` keeps a shared download cache, so a file fetched by one member is not fetched again; `fs` and `sftp` give remote-file semantics for a shared filesystem or an SFTP host. **There is no `rclone` storage plugin on conda-forge or bioconda** (nor on PyPI as of 2026-10), so `rclone` is only the command-line tool for use in rules or by hand. Not included: `azure`, `ftp`, `irods`, `rucio`, `xrootd`, `sharepoint` (request them if needed) and the logger plugins `panoptes`, `snkmt` and `prometheus`, which need a server to report to.
+
+**Report plugins** (`snakemake-report-plugin-fairscape`, `-nanopub`) are not on conda channels and are PyPI-only. A trial solve with both added resolved, but added about a dozen PyPI packages (rdflib, pyshacl, nanopub and others) and moved Python from 3.14 to 3.13. They are 0.1.0 and 0.3.2 releases that only act when you pass a report plugin option. Not harmful, but not worth coupling every user's Snakemake to. Keep them out of the group environment and put them in the workflow's own `pixi.toml` (below) for the projects that use them.
+
+**Can members add plugins to the group module?** Not into the environment: it is read-only, and that is intended. Snakemake finds plugins by importing installed `snakemake_*_plugin_*` Python packages, so a plugin placed on `PYTHONPATH` (for example `pip install --target ~/snk-plugins <plugin>` and `export PYTHONPATH=~/snk-plugins`) should be discovered. **VERIFY**, and expect trouble when the plugin's dependency pins disagree with the environment's. Prefer the next option.
+
+**Recommended for anything beyond the shared set: the workflow's own `pixi.toml`.** A project with a `pixi.toml` and committed `pixi.lock` pins its own Snakemake and plugins (conda or PyPI), rebuilds identically for any member, and does not depend on which group version is installed. Run it with `pixi run snakemake ...` from the project (after `module load pixi`). The group `snakemake` module then remains the easy default for quick work. A project template and `run.sh` support for this are not written yet.
 
 ## Install <version>
 
