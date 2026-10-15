@@ -10,6 +10,7 @@
 |---|---|
 | `Snakefile`, `config.yaml` | workflow (NFS, version with git) |
 | `profiles/slurm/` | Snakemake 9+ SLURM profile |
+| `pixi.toml`, `pixi.lock` | software for the workflow itself (Snakemake, plugins); commit both |
 | `envs/` | conda env definitions for rules |
 | `docs/` | sample sheets, metadata, notes |
 | `results/` | final tables/figures only (NFS) |
@@ -20,6 +21,7 @@ Heavy data and intermediates live in `@SCRATCH_ROOT@/users/<handle>/@PROJECT_NAM
 ## Run
 
 ```bash
+module load pixi   # once per shell; run.sh then uses this project's pixi environment
 ./run.sh -n     # dry run
 ./run.sh        # submit to SLURM
 ```

@@ -10,7 +10,7 @@ Group directory conventions, tooling, and documentation for the Bendall group on
 
 Start at [docs/index.md](docs/index.md):
 
-- **Getting started:** [First-time admin setup](docs/setup-admin.md), [First-time user setup](docs/setup-user.md); [Installed apps](docs/apps/index.md) (install procedures, e.g. [Miniforge3](docs/apps/miniforge3.md))
+- **Getting started:** [First-time admin setup](docs/setup-admin.md), [First-time user setup](docs/setup-user.md); [Installed apps](docs/apps/index.md) (install procedures, e.g. [Miniforge3](docs/apps/miniforge3.md), [Snakemake](docs/apps/snakemake.md), [Pixi](docs/apps/pixi.md))
 - **Reference:**
 
 1. [Storage tiers](docs/01-storage-tiers.md)

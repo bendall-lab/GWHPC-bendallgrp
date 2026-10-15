@@ -1,0 +1,21 @@
+# Software for this project. run.sh uses it when this file is present: `pixi run snakemake ...`.
+# Needs `module load pixi`. Change dependencies here, then run `pixi lock` and commit pixi.toml + pixi.lock.
+[workspace]
+name = "@PROJECT_NAME@"
+channels = ["conda-forge", "bioconda"]
+platforms = ["linux-64"]
+
+[dependencies]
+snakemake = ">=9.27,<10"
+snakemake-executor-plugin-slurm = "*"
+# conda/mamba build the environments of rules with a `conda:` directive (envs/*.yaml).
+conda = "*"
+mamba = "*"
+# Add storage plugins and tools as needed, e.g.:
+# snakemake-storage-plugin-http = "*"
+# snakemake-storage-plugin-s3 = "*"
+# snakemake-storage-plugin-zenodo = "*"
+
+# PyPI-only packages (e.g. snakemake-report-plugin-nanopub) go here:
+# [pypi-dependencies]
+# snakemake-report-plugin-nanopub = "*"
