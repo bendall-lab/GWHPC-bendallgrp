@@ -32,10 +32,10 @@ Included in the shared environment:
 | Kind | Plugins |
 |---|---|
 | Executor | `slurm` (it brings `slurm-jobstep`) |
-| Storage | `http`, `cached-http`, `s3`, `gcs`, `zenodo`, `fs` |
+| Storage | `http`, `cached-http`, `s3`, `zenodo`, `fs` |
 | Tool | `rclone` binary |
 
-Why the extras: `cached-http` keeps a shared download cache, so a file fetched by one member is not fetched again; `fs` gives remote-file semantics for a shared filesystem. **There is no `rclone` storage plugin on conda-forge or bioconda** (nor on PyPI as of 2026-10), so `rclone` is only the command-line tool for use in rules or by hand. Not included: `sftp` (its `pysftp` dependency fails to import with current `paramiko`, which breaks Snakemake at startup), `azure`, `ftp`, `irods`, `rucio`, `xrootd`, `sharepoint` (request them if needed) and the logger plugins `panoptes`, `snkmt` and `prometheus`, which need a server to report to.
+Why the extras: `cached-http` keeps a shared download cache, so a file fetched by one member is not fetched again; `fs` gives remote-file semantics for a shared filesystem. **There is no `rclone` storage plugin on conda-forge or bioconda** (nor on PyPI as of 2026-10), so `rclone` is only the command-line tool for use in rules or by hand. Not included: `gcs` (its google-cloud dependencies hold `grpcio` back, which prints a FutureWarning on every run; add it to a project's own `pixi.toml` if needed), `sftp` (its `pysftp` dependency fails to import with current `paramiko`, which breaks Snakemake at startup), `azure`, `ftp`, `irods`, `rucio`, `xrootd`, `sharepoint` (request them if needed) and the logger plugins `panoptes`, `snkmt` and `prometheus`, which need a server to report to.
 
 **One broken plugin breaks Snakemake.** Snakemake imports every installed plugin when it starts, so the set is kept small and each addition must pass `snakemake --version` after the install.
 
