@@ -17,6 +17,7 @@ How the Bendall group organizes data, software, and workflows on GW's Pegasus cl
 9. [Reference data](09-references.md): referenceDB master on NFS, scratch mirror, staging rule
 10. [Usernames and handles](10-user-names.md): username map, user directory naming, readable `ls`
 11. [Group shell setup](11-shell-setup.md): shared `.bashrc` snippet, `umask`, shortcuts
+12. [Using AI agents](12-agents.md): pointing your agent at the group's agent guide
 
 Facts marked **VERIFY** have not been confirmed against GW documentation or on the cluster.
 

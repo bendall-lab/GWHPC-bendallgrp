@@ -19,7 +19,7 @@ Created by `scripts/init-group-dir.sh` (idempotent; `--dry-run` shows what it wo
 │   └── workflows/            # shared workflow repos (referenceDB, ...)
 ├── local/                    # group-authored glue, published from the checkout
 │   ├── bin/                  # symlinks to executable scripts; on members' PATH
-│   └── etc/                  # symlinks to sourced files (group-bashrc.sh, hpc-aliases.sh)
+│   └── etc/                  # symlinks to sourced files (group-bashrc.sh, hpc-aliases.sh) and the agent guide
 ├── projects/                 # one directory per project (below)
 ├── users/<handle>/           # small personal files; .<linux_user> is a symlink to it (10-user-names.md)
 └── archive/                  # finished projects, read-only
@@ -41,7 +41,7 @@ The split follows the Unix `/usr/local` vs `/opt` convention:
 - **`software/`** holds things we *install or build*: conda environments, containers, workflow repositories. They have versions and come from elsewhere.
 - **`local/`** holds things *we author for this group's environment*: the glue scripts and shell configuration. It is small, read by every member's shell, and put on `PATH`.
 
-`local/bin/` and `local/etc/` contain only symlinks into `software/tools/GWHPC-bendallgrp.git/scripts/`, created by `scripts/link-local.sh`. The scripts find their helpers by resolving their own symlink, so they run the same way from `local/bin/` as from the checkout. `local/` is owner-writable (2755): members read and run it, and only the admin changes it.
+`local/bin/` and `local/etc/` contain only symlinks into `software/tools/GWHPC-bendallgrp.git/scripts/` (and `agents/`, for the [agent guide](12-agents.md)), created by `scripts/link-local.sh`. The scripts find their helpers by resolving their own symlink, so they run the same way from `local/bin/` as from the checkout. `local/` is owner-writable (2755): members read and run it, and only the admin changes it.
 
 ## Per-project layout
 

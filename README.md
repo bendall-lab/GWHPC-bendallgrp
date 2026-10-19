@@ -24,10 +24,12 @@ Start at [docs/index.md](docs/index.md):
 9. [Reference data](docs/09-references.md)
 10. [Usernames and handles](docs/10-user-names.md)
 11. [Group shell setup](docs/11-shell-setup.md)
+12. [Using AI agents](docs/12-agents.md)
 
 ## Contents
 
 - `scripts/`: `init-group-dir.sh`, `link-local.sh`, `init-user.sh`, `new-project.sh`, `check-node-storage.sh`, `sync-references.sh`, `user-map-add.sh` and `install-modulefiles.sh` (admin-only, not linked), `install-shell-setup.sh`, `group-bashrc.sh` and `hpc-aliases.sh` (both sourced)
+- `agents/`: `bendallgrp-agent-guide.md`, the guide for members' AI agents (deployed to `local/etc/` by `link-local.sh`; not an `AGENTS.md` for this repo)
 - `modulefiles/`: the group's Lmod modulefiles, copied to the cluster by `scripts/install-modulefiles.sh`
 - `templates/`: `app-doc.md` (page template for an installed app), `modulefiles/tool.lua` (short Lmod modulefile skeleton), `user_map.example.tsv`
 - `templates/project/`: Snakemake 9+ project skeleton with a SLURM profile and a reference staging rule

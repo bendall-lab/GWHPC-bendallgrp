@@ -2,6 +2,7 @@
 # Publish the user-facing scripts by symlinking them from local/ into this checkout.
 #   local/bin/<script>.sh  -> <checkout>/scripts/<script>.sh   (executables, on members' PATH)
 #   local/etc/<file>.sh    -> <checkout>/scripts/<file>.sh     (files members source)
+#   local/etc/<file>.md    -> <checkout>/agents/<file>.md      (guide for members' AI agents)
 # Idempotent. Run by the group admin from the permanent checkout
 # ($GROUP_ROOT/software/tools/GWHPC-bendallgrp.git) after adding or renaming a script.
 # `git pull` in the checkout updates what members run; there is no separate deploy step.
@@ -16,6 +17,7 @@ require_admin
 
 BIN_SCRIPTS=(init-user.sh new-project.sh sync-references.sh check-node-storage.sh install-shell-setup.sh)
 ETC_SCRIPTS=(group-bashrc.sh hpc-aliases.sh)
+AGENT_FILES=(bendallgrp-agent-guide.md)
 
 expected="$GROUP_ROOT/software/tools/GWHPC-bendallgrp.git"
 [[ "$(cd -P "$SCRIPT_DIR/.." && pwd)" == "$(cd -P "$expected" 2>/dev/null && pwd || echo "$expected")" ]] ||
@@ -26,8 +28,8 @@ make_dir "$LOCAL_ROOT"     2755
 make_dir "$LOCAL_ROOT/bin" 2755
 make_dir "$LOCAL_ROOT/etc" 2755
 
-link() {   # link TARGET_DIR NAME
-    local dir="$1" name="$2" src="$SCRIPT_DIR/$2"
+link() {   # link TARGET_DIR NAME [SOURCE_DIR]
+    local dir="$1" name="$2" src="${3:-$SCRIPT_DIR}/$2"
     [[ -f "$src" ]] || die "missing script: $src"
     run ln -sfn "$src" "$dir/$name"
 }
@@ -39,5 +41,6 @@ done
 
 for s in "${BIN_SCRIPTS[@]}"; do link "$LOCAL_ROOT/bin" "$s"; done
 for s in "${ETC_SCRIPTS[@]}"; do link "$LOCAL_ROOT/etc" "$s"; done
+for s in "${AGENT_FILES[@]}"; do link "$LOCAL_ROOT/etc" "$s" "$SCRIPT_DIR/../agents"; done
 
-info "Linked ${#BIN_SCRIPTS[@]} scripts into $LOCAL_ROOT/bin and ${#ETC_SCRIPTS[@]} into $LOCAL_ROOT/etc"
+info "Linked ${#BIN_SCRIPTS[@]} scripts into $LOCAL_ROOT/bin and $((${#ETC_SCRIPTS[@]} + ${#AGENT_FILES[@]})) files into $LOCAL_ROOT/etc"
