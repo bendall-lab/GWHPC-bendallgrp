@@ -148,6 +148,16 @@ scripts/link-local.sh        # only if a user-facing script was added or renamed
 
 A `git pull` takes effect for everyone immediately, including `group-bashrc.sh` at their next login, so review changes to shell files before pulling. Pushing to `main` publishes the docs site ([Publishing these docs](08-publishing-docs.md)).
 
+### Publish the agent guide
+
+`agents/bendallgrp-agent-guide.md` is the instruction file for members' AI agents ([Using AI agents](12-agents.md)). `link-local.sh` symlinks it to `local/etc/bendallgrp-agent-guide.md`, so [step 3](#3-publish-the-user-facing-scripts) already deploys it, and later edits reach members with `git pull`. Check that members can read it:
+
+```bash
+ls -lL /GWSPH/groups/bendallgrp/local/etc/bendallgrp-agent-guide.md
+```
+
+Review edits to the guide like shell changes: members' agents follow it at once. When a doc rule changes (partitions, modules, paths), update the guide in the same commit. Tell members to follow [Using AI agents](12-agents.md) to point their agents at it.
+
 ### Remove a member
 
 Remove them from the Unix group through RTS, and move their `users/<handle>` and scratch directories out of the way when they are no longer needed. Remove their line from `admin/user_map.tsv` only after any of their files that others rely on have been reassigned, since `lsh` will otherwise show the raw username.
